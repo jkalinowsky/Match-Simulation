@@ -3,20 +3,18 @@
 #include "Tactic.h"
 #include "Player.h"
 
+class Player;
+
 class Team {
 private:
-    Tactic tactic;
+    Tactic* tactic;
     Player** players;
 
 public:
-    Team(Tactic& tactic, Player** newPlayers)
-            : tactic(tactic) {
-        for (int i = 0; i < 11; i++) {
-            players[i] = newPlayers[i];
-        }
-    }
+    Team() {}
 
-    void setTactic(Tactic& tactic);
+    void setTactic(Tactic* tactic);
+    void setPlayers(Player** players);
     Tactic getTactic() const;
     bool playersNearby(Player* p1, Player* p2);
     Player** getPlayers(int passType, Player* tp);

@@ -1,11 +1,17 @@
 #include "Team.h"
 
-void Team::setTactic(Tactic &tactic) {
+void Team::setTactic(Tactic* tactic) {
     this->tactic = tactic;
 }
 
+void Team::setPlayers(Player **players) {
+    for (int i = 0; i < 11; i++) {
+        this->players[i] = players[i];
+    }
+}
+
 Tactic Team::getTactic() const {
-    return this->tactic;
+    return *tactic;
 }
 
 bool Team::playersNearby(Player* p1, Player* p2) {

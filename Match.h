@@ -4,7 +4,15 @@
 
 class Match {
 private:
-    Team homeTeam, awayTeam;
+    Team* homeTeam, *awayTeam;
+    int homeScore = 0;
+    int awayScore = 0;
+    Match(Team* team1, Team* team2) {
+        homeTeam = team1;
+        awayTeam = team2;
+    }
+public:
+    void playMatch();
 };
 
 

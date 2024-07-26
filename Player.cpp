@@ -4,6 +4,12 @@
 
 #include "Player.h"
 
+#include <utility>
+
+void Player::print() {
+    std::cout << "Player: " << name << ", Position: " << position.positionDetails << ", Age: " << age << ", Overall: " << overall << std::endl;
+}
+
 void Player::calculateOverall() {
     for (int attribute : attributes)
         this->overall += attribute;
@@ -25,6 +31,10 @@ void Player::setFieldSection(int newX, int newY) {
 
 struct fieldSection Player::getFieldSection() const {
     return this->fieldSection;
+}
+
+Position Player::getPosition() const {
+    return this->position;
 }
 
 // functions which are responsible for Player actions
@@ -191,6 +201,57 @@ Player* Player::choosePlayerForPass(int passType) {
     return avPlayers[numbers[rand() % index]];
 }
 
-bool Player::isPassCompleted(Player* p) {
-    int passChance =
+bool Player::isPassCompleted(int passType, Player** o) {
+    // p is player to pass, o is opponent or opponents which are in the same field section, they have chance to intercept
+    // calculate pass chance and then calculate interception chance
+    int passChance;
+    switch(passType) {
+        case SHORTPASS:
+            passChance = 1.0 * this->attributes[SHORTPASSING] * 10;
+            break;
+        case THROUGHPASS:
+            passChance = 0.75 * (this->attributes[LONGPASSING] * 1/3 + this->attributes[VISION] * 2/3) * 10;
+            break;
+        case LONGPASS:
+            passChance = 0.8 * this->attributes[LONGPASSING] * 10;
+            break;
+    }
+
+    if ((rand()%100) <= passChance) {
+        for (int i = 0; i < sizeof(o) / sizeof(o[0]); i++) {
+            if (o[i]->didIIntercept())
+                return false;
+        }
+        return true;
+    }
+    return false;
+}
+
+bool Player::shouldIDribble(Player* o) {
+    int dribbleChance = (this->attributes[DRIBBLING] * 3/4 + this->attributes[PACE] * 1/4) * 10 -
+                        (o->attributes[DEFENDING] * 2/3 + o->attributes[PACE] * 1/3) * 4;
+    if (rand()%100 <= dribbleChance)
+        return true;
+    return false;
+}
+
+
+Player::Player(std::string name, Team* team, Position position, int age, int pace, int finishing, int longShooting,
+       int shortPassing, int longPassing, int vision, int dribbling, int defending) {
+    this->name = std::move(name);
+    this->team = team;
+    this->position = position;
+    this->age = age;
+    attributes[PACE] = pace;
+    attributes[FINISHING] = finishing;
+    attributes[LONGSHOOTING] = longShooting;
+    attributes[LONGPASSING] = longPassing;
+    attributes[SHORTPASSING] = shortPassing;
+    attributes[VISION] = vision;
+    attributes[DRIBBLING] = dribbling;
+    // CAN BE ADDED IN FUTURE attributes[STRENGTH] = strength;
+    // CAN BE ADDED IN FUTURE attributes[AGGRESSION] = aggression;
+    attributes[DEFENDING] = defending;
+
+    calculateOverall();
 }

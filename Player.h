@@ -9,8 +9,9 @@
 #define LONGSHOOTING 2
 #define SHORTPASSING 3
 #define LONGPASSING 4
-#define DRIBBLING 5
-#define DEFENDING 6
+#define VISION 5
+#define DRIBBLING 6
+#define DEFENDING 7
 
 enum PositionDetails {
     GK = 0,
@@ -48,43 +49,30 @@ struct fieldSection {
     int y;
 };
 
+class Team;
+
 class Player {
 private:
+
     std::string name;
     Team* team;
     Position position{};
     int age;
-    int attributes[7] = {0,0,0,0,0,0,0};
+    int attributes[8] = {0,0,0,0,0,0,0, 0};
     int overall = 0;
     fieldSection fieldSection = {-1, -1};
-
-
-    Player(const std::string &name, Team &team, Position position, int age, int pace, int finishing, int longShooting,
-           int shortPassing, int longPassing, int dribbling, int defending) {
-        this->name = name;
-        this->team = &team;
-        this->position = position;
-        this->age = age;
-        attributes[PACE] = pace;
-        attributes[FINISHING] = finishing;
-        attributes[LONGSHOOTING] = longShooting;
-        attributes[LONGPASSING] = longPassing;
-        attributes[SHORTPASSING] = shortPassing;
-        // CAN BE ADDED IN FUTURE attributes[VISION] = vision;
-        attributes[DRIBBLING] = dribbling;
-        // CAN BE ADDED IN FUTURE attributes[STRENGTH] = strength;
-        // CAN BE ADDED IN FUTURE attributes[AGGRESSION] = aggression;
-        attributes[DEFENDING] = defending;
-
-        calculateOverall();
-    }
-
 public:
+    Player(std::string name, Team* team, Position position, int age, int pace, int finishing, int longShooting,
+           int shortPassing, int longPassing, int vision, int dribbling, int defending);
+
+    void print();
+
     void calculateOverall();
     int returnAttribute(int attribute);
     void setFieldSection(int xInc, int yInc);
     void moveOnField(int newX, int newY);
     struct fieldSection getFieldSection() const;
+    Position getPosition() const;
 
     // functions which are responsible for Player actions
     bool canRun();
@@ -93,9 +81,9 @@ public:
     bool didIIntercept();
     int choosePassType();
     Player* choosePlayerForPass(int passType);
-    bool isPassCompleted(Player* p);
-    bool shouldIDribble();
-    bool didIDribble();
+    bool isPassCompleted(int passType, Player** o);
+    bool shouldIDribble(Player* o);
+    // need to add function for dribbling
     bool didIBlock();
     int didIShoot();
     bool didISaved();
