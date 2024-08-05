@@ -12,6 +12,11 @@
 #define VISION 5
 #define DRIBBLING 6
 #define DEFENDING 7
+#define GK_DIVING 8
+#define GK_HANDLING 9
+#define GK_KICKING 10
+#define GK_POSITIONING 11
+#define GK_REFLEXES 12
 
 enum PositionDetails {
     GK = 0,
@@ -47,6 +52,10 @@ struct Position {
 struct fieldSection {
     int x;
     int y;
+
+    bool operator==(const fieldSection& other) const {
+        return x == other.x && y == other.y;
+    }
 };
 
 class Team;
@@ -58,21 +67,29 @@ private:
     Team* team;
     Position position{};
     int age;
-    int attributes[8] = {0,0,0,0,0,0,0, 0};
+    int attributes[13] = {0,0,0,0,0,0,0, 0};
     int overall = 0;
     fieldSection fieldSection = {-1, -1};
 public:
     Player(std::string name, Team* team, Position position, int age, int pace, int finishing, int longShooting,
-           int shortPassing, int longPassing, int vision, int dribbling, int defending);
+           int shortPassing, int longPassing, int vision, int dribbling, int defending,
+           int gk_diving, int gk_handling, int gk_kicking, int gk_positioning, int gk_reflexes);
 
     void print();
 
+    std::string getName();
+
+    Team* getTeam();
+
     void calculateOverall();
+    struct fieldSection calculateFieldSection() const;
     int returnAttribute(int attribute);
-    void setFieldSection(int xInc, int yInc);
-    void moveOnField(int newX, int newY);
+    void setFieldSection(int newX, int newY);
+    void moveOnField(int xInc, int yInc);
     struct fieldSection getFieldSection() const;
+    struct fieldSection mirrorFS(struct fieldSection fs);
     Position getPosition() const;
+    
 
     // functions which are responsible for Player actions
     bool canRun();
@@ -81,8 +98,8 @@ public:
     bool didIIntercept();
     int choosePassType();
     Player* choosePlayerForPass(int passType);
-    bool isPassCompleted(int passType, Player** o);
-    bool shouldIDribble(Player* o);
+    bool isPassCompleted(int passType, Player* o);
+    bool didIDribble(Player* o);
     // need to add function for dribbling
     bool didIBlock();
     int didIShoot();

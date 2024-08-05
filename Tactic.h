@@ -8,6 +8,7 @@ private:
     int mentality, tempo, passingStyle, workRate, width, pressingLine, strictness;
     int formation[3];
 
+public:
     Tactic(const std::string& name, int mentality, int tempo, int passingStyle,
            int workRate, int width, int pressingLine, int strictness, int defenders, int midfielders, int attackers) {
         this->name = name;
@@ -22,8 +23,6 @@ private:
         formation[1] = midfielders;
         formation[2] = attackers;
     }
-
-public:
     void setMentality(int newMentality);
     int getMentality() const;
     void setTempo(int newTempo);

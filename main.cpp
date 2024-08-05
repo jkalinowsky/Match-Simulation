@@ -13,7 +13,7 @@ PositionDetails stringToPosition(const std::string& positionStr) {
     else if (positionStr == "RW" || positionStr == "RF" || positionStr == "RM") return RF;
     else if (positionStr == "CAM" || positionStr == "CF") return CAM;
     else if (positionStr == "CM" || positionStr == "LCM" || positionStr == "RCM") return CM;
-    else if (positionStr == "CDM") return DM;
+    else if (positionStr == "CDM" || positionStr == "RDM" || positionStr == "LDM") return DM;
     else if (positionStr == "RWB" || positionStr == "RB") return RB;
     else if (positionStr == "LWB" || positionStr == "LB") return LB;
     else if (positionStr == "CB" || positionStr == "LCB" || positionStr == "RCB") return CB;
@@ -38,6 +38,9 @@ std::vector<std::string> split(const std::string& str, char delimiter) {
 }
 
 int safe_stoi(const std::string& str) {
+    if (str.empty()) {
+        return rand() % 10 + 1;
+    }
     try {
         return std::stoi(str);
     } catch (const std::invalid_argument&) {
@@ -73,8 +76,22 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
             int vis = safe_stoi(fields[10]);
             int drib = safe_stoi(fields[11]);
             int def = safe_stoi(fields[12]);
-
-            Player* player = new Player(name, team, pos, age, pace, finishing, longs, shortp, longp, vis, drib, def);
+            Player* player;
+            if (posD == GK) {
+                int gk_d = safe_stoi(fields[13]);
+                int gk_h = safe_stoi(fields[14]);
+                int gk_k = safe_stoi(fields[15]);
+                int gk_p = safe_stoi(fields[16]);
+                int gk_r = safe_stoi(fields[17]);
+                player = new Player(name, team, pos, age, pace, finishing, longs,
+                                            shortp, longp, vis, drib, def,
+                                            gk_d, gk_h, gk_k, gk_p, gk_r);
+            }
+            else {
+                player = new Player(name, team, pos, age, pace, finishing, longs,
+                                            shortp, longp, vis, drib, def,
+                                            0, 0, 0, 0, 0);
+            }
             players.push_back(player);
             playerCount++;
         }
@@ -91,14 +108,41 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
 
 
 int main() {
+    srand(time(0));
+    Tactic* posBased = new Tactic("Tactic", 1, 2, 0, 2, 2, 2, 2, 4, 4, 2);
+    Tactic* longBased = new Tactic("Tactic", 4, 2, 2, 2, 2, 2, 2, 4, 4, 2);
+
+    // loading manchester city
     Team* manC = new Team();
-    Player** players = loadPlayers("Arsenal", manC);
-    manC->setPlayers(players);
+    Player** players = loadPlayers("Manchester City", manC);
     std::sort(players, players + 11, [](const Player* a, const Player* b) {
         return a->getPosition().positionDetails < b->getPosition().positionDetails;
     });
+    manC->setPlayers(players);
+
+    // loading arsenal
+    Team* arsenal = new Team();
+    players = loadPlayers("Burnley", arsenal);
+    std::sort(players, players + 11, [](const Player* a, const Player* b) {
+        return a->getPosition().positionDetails < b->getPosition().positionDetails;
+    });
+    arsenal->setPlayers(players);
+
+    manC->setTactic(posBased);
+    arsenal->setTactic(posBased);
+
+    players = manC->getPlayers();
+    std::cout << "TEAM 1" << std::endl;
     for (int i = 0; i < 11; i++) {
-        players[i]->print();
+        std::cout << "SHORT PASSING: " << players[i]->returnAttribute(SHORTPASSING) << " LONG PASSING: " << players[i]->returnAttribute(LONGPASSING) << std::endl;
+    }
+    players = arsenal->getPlayers();
+    std::cout << "TEAM 2" << std::endl;
+    for (int i = 0; i < 11; i++) {
+        std::cout << "SHORT PASSING: " << players[i]->returnAttribute(SHORTPASSING) << " LONG PASSING: " << players[i]->returnAttribute(LONGPASSING) << std::endl;
     }
 
+    Match* m = new Match(manC, arsenal);
+    m->playMatch();
+    return 0;
 }

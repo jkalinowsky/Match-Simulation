@@ -11,13 +11,15 @@ private:
     Player** players;
 
 public:
-    Team() {}
+    Team();
 
     void setTactic(Tactic* tactic);
     void setPlayers(Player** players);
+    Player** getPlayers();
+    Player* getPlayerAtFS(struct fieldSection fs);
     Tactic getTactic() const;
     bool playersNearby(Player* p1, Player* p2);
-    Player** getPlayers(int passType, Player* tp);
+    Player** getPlayersForPass(int passType, Player* tp);
 
 
 };

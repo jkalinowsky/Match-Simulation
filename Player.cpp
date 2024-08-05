@@ -10,6 +10,14 @@ void Player::print() {
     std::cout << "Player: " << name << ", Position: " << position.positionDetails << ", Age: " << age << ", Overall: " << overall << std::endl;
 }
 
+std::string Player::getName() {
+    return name;
+}
+
+Team* Player::getTeam() {
+    return team;
+}
+
 void Player::calculateOverall() {
     for (int attribute : attributes)
         this->overall += attribute;
@@ -36,6 +44,12 @@ struct fieldSection Player::getFieldSection() const {
 Position Player::getPosition() const {
     return this->position;
 }
+
+
+struct fieldSection Player::mirrorFS(struct fieldSection fs) {
+    return {9 - fs.x, 9 - fs.y};
+}
+
 
 // functions which are responsible for Player actions
 
@@ -87,7 +101,7 @@ bool Player::didIIntercept() {
 }
 
 int Player::choosePassType() {
-    int shortPass, throughPass, longPass;
+    int shortPass, throughPass;
     switch(this->team->getTactic().getPassingStyle()) {
         // short 70/20/10
         case 0:
@@ -151,7 +165,7 @@ Player* Player::choosePlayerForPass(int passType) {
             break;
     }
     Player** avPlayers;
-    avPlayers = t->getPlayers(passType, this);
+    avPlayers = t->getPlayersForPass(passType, this);
     int random = rand() % 100;
     int* numbers = new int[11];
     int index = 0;
@@ -201,7 +215,7 @@ Player* Player::choosePlayerForPass(int passType) {
     return avPlayers[numbers[rand() % index]];
 }
 
-bool Player::isPassCompleted(int passType, Player** o) {
+bool Player::isPassCompleted(int passType, Player* o) {
     // p is player to pass, o is opponent or opponents which are in the same field section, they have chance to intercept
     // calculate pass chance and then calculate interception chance
     int passChance;
@@ -218,16 +232,14 @@ bool Player::isPassCompleted(int passType, Player** o) {
     }
 
     if ((rand()%100) <= passChance) {
-        for (int i = 0; i < sizeof(o) / sizeof(o[0]); i++) {
-            if (o[i]->didIIntercept())
-                return false;
-        }
+        if (o != nullptr && o->didIIntercept())
+            return false;
         return true;
     }
     return false;
 }
 
-bool Player::shouldIDribble(Player* o) {
+bool Player::didIDribble(Player* o) {
     int dribbleChance = (this->attributes[DRIBBLING] * 3/4 + this->attributes[PACE] * 1/4) * 10 -
                         (o->attributes[DEFENDING] * 2/3 + o->attributes[PACE] * 1/3) * 4;
     if (rand()%100 <= dribbleChance)
@@ -235,9 +247,33 @@ bool Player::shouldIDribble(Player* o) {
     return false;
 }
 
+fieldSection Player::calculateFieldSection() const {
+    switch(position.positionDetails) {
+        case 0:
+            return {2, 0};
+        case 1:
+            return {0, 1};
+        case 2:
+            return {2, 1};
+        case 3:
+            return {4, 1};
+        case 4:
+        case 5:
+            return {2, 2};
+        case 6:
+            return {2, 3};
+        case 7:
+            return {0, 3};
+        case 8:
+            return {2,4};
+        case 9:
+            return {4, 3};
+    }
+}
 
 Player::Player(std::string name, Team* team, Position position, int age, int pace, int finishing, int longShooting,
-       int shortPassing, int longPassing, int vision, int dribbling, int defending) {
+               int shortPassing, int longPassing, int vision, int dribbling, int defending,
+               int gk_diving, int gk_handling, int gk_kicking, int gk_positioning, int gk_reflexes) {
     this->name = std::move(name);
     this->team = team;
     this->position = position;
@@ -252,6 +288,13 @@ Player::Player(std::string name, Team* team, Position position, int age, int pac
     // CAN BE ADDED IN FUTURE attributes[STRENGTH] = strength;
     // CAN BE ADDED IN FUTURE attributes[AGGRESSION] = aggression;
     attributes[DEFENDING] = defending;
+    attributes[GK_DIVING] = gk_diving;
+    attributes[GK_HANDLING] = gk_handling;
+    attributes[GK_KICKING] = gk_kicking;
+    attributes[GK_POSITIONING] = gk_positioning;
+    attributes[GK_REFLEXES] = gk_reflexes;
+
+    fieldSection = calculateFieldSection();
 
     calculateOverall();
 }
