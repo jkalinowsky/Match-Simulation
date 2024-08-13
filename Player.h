@@ -62,33 +62,42 @@ class Team;
 
 class Player {
 private:
-
     std::string name;
     Team* team;
     Position position{};
     int age;
     int attributes[13] = {0,0,0,0,0,0,0, 0};
     int overall = 0;
-    fieldSection fieldSection = {-1, -1};
+    fieldSection fs = {-1, -1};
+    int movingCooldown;
+    int heatMap[10][5];
 public:
     Player(std::string name, Team* team, Position position, int age, int pace, int finishing, int longShooting,
            int shortPassing, int longPassing, int vision, int dribbling, int defending,
            int gk_diving, int gk_handling, int gk_kicking, int gk_positioning, int gk_reflexes);
 
-    void print();
-
+    int returnAttribute(int attribute);
     std::string getName();
-
     Team* getTeam();
+    Position getPosition() const;
+    bool getMovingCooldown();
+
+    struct fieldSection getFieldSection() const;
+    struct fieldSection calculateFieldSection() const;
+    static struct fieldSection mirrorFS(struct fieldSection fs);
+    struct fieldSection randomPosition() const;
+
+    bool isRightPositionAttack(int fsX, int fsY);
+    bool isRightPositionDefence(int fsX, int fsY);
 
     void calculateOverall();
-    struct fieldSection calculateFieldSection() const;
-    int returnAttribute(int attribute);
     void setFieldSection(int newX, int newY);
-    void moveOnField(int xInc, int yInc);
-    struct fieldSection getFieldSection() const;
-    struct fieldSection mirrorFS(struct fieldSection fs);
-    Position getPosition() const;
+    void moveWithoutBallAttack(int ballY);
+    void moveWithoutBallDefence(int ballY);
+    void decreaseMovingCooldown();
+
+    void updateHeatmap();
+    void printHeatmap();
     
 
     // functions which are responsible for Player actions
@@ -97,13 +106,11 @@ public:
     bool shouldIPass();
     bool didIIntercept();
     int choosePassType();
-    Player* choosePlayerForPass(int passType);
-    bool isPassCompleted(int passType, Player* o);
+    Player& choosePlayerForPass(int passType);
+    bool isPassCompleted(int passType);
     bool didIDribble(Player* o);
-    // need to add function for dribbling
-    bool didIBlock();
-    int didIShoot();
-    bool didISaved();
+    void dribble();
+    bool didISaved(int chance);
 };
 
 

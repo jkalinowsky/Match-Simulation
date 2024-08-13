@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/OpenFM.dir/main.cpp.o CMakeFiles/OpenFM.dir/Player.cpp.o CMakeFiles/OpenFM.dir/Team.cpp.o CMakeFiles/OpenFM.dir/Tactic.cpp.o CMakeFiles/OpenFM.dir/Match.cpp.o  -o OpenFM 

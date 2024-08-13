@@ -10,19 +10,7 @@ private:
 
 public:
     Tactic(const std::string& name, int mentality, int tempo, int passingStyle,
-           int workRate, int width, int pressingLine, int strictness, int defenders, int midfielders, int attackers) {
-        this->name = name;
-        this->mentality = mentality;
-        this->tempo = tempo;
-        this->passingStyle = passingStyle;
-        this->workRate = workRate;
-        this->width = width;
-        this->pressingLine = pressingLine;
-        this->strictness = strictness;
-        formation[0] = defenders;
-        formation[1] = midfielders;
-        formation[2] = attackers;
-    }
+           int workRate, int width, int pressingLine, int strictness, int defenders, int midfielders, int attackers);
     void setMentality(int newMentality);
     int getMentality() const;
     void setTempo(int newTempo);
