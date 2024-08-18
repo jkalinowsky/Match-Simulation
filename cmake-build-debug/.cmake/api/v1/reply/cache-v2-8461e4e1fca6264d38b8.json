@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"
+			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -679,7 +679,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM"
+			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1215,7 +1215,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"
+			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"
 		},
 		{
 			"name" : "OpenFM_SOURCE_DIR",
@@ -1227,7 +1227,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM"
+			"value" : "/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation"
 		},
 		{
 			"name" : "ProcessorCount_cmd_nproc",

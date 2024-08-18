@@ -1,4 +1,4 @@
-C:\WINDOWS\system32\wsl.exe --distribution Debian --exec /bin/bash -c "export CMAKE_COLOR_DIAGNOSTICS=ON && export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug && /usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G 'CodeBlocks - Unix Makefiles' -S /mnt/c/Users/kubak/Projekty/OpenFM/OpenFM -B /mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"
+C:\WINDOWS\system32\wsl.exe --distribution Debian --exec /bin/bash -c "export CMAKE_COLOR_DIAGNOSTICS=ON && export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug && /usr/local/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G 'CodeBlocks - Unix Makefiles' -S /mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation -B /mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"
 -- The C compiler identification is GNU 12.2.0
 -- The CXX compiler identification is GNU 12.2.0
 -- Check for working C compiler: /usr/bin/cc
@@ -15,4 +15,4 @@ C:\WINDOWS\system32\wsl.exe --distribution Debian --exec /bin/bash -c "export CM
 -- Detecting CXX compile features - done
 -- Configuring done
 -- Generating done
--- Build files have been written to: /mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug
+-- Build files have been written to: /mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug

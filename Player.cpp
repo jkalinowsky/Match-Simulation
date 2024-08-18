@@ -726,8 +726,8 @@ Player& Player::choosePlayerForPass(int passType) {
     int index = 0;
     Player** avPlayers;
     int* numbers = new int[11];
-    Team* t = this->team;
-    int chances[3];
+    Team* t = this->getTeam();
+    int* chances = new int[3];
     switch(t->getTactic().getMentality()) {
         case 0:
             chances[0] = 35;

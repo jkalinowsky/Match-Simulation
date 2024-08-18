@@ -127,4 +127,7 @@ Match ends. RESULT: 2 - 3 Shots: 16 | 15 Shots on target: 6 | 8 Possession: 43% 
 Match ends. RESULT: 2 - 1 Shots: 12 | 10 Shots on target: 7 | 4 Possession: 56% - 44% Passes: 475 | 329 Touches: 757 | 593 Interceptions: 141 | 138 Dribbles: 100 | 82
 Match ends. RESULT: 1 - 0 Shots: 15 | 12 Shots on target: 5 | 4 Possession: 49% - 51% Passes: 410 | 407 Touches: 665 | 685 Interceptions: 131 | 122 Dribbles: 89 | 100
 Match ends. RESULT: 0 - 3 Shots: 12 | 18 Shots on target: 3 | 5 Possession: 49% - 51% Passes: 399 | 393 Touches: 672 | 678 Interceptions: 136 | 133 Dribbles: 100 | 99
-Match ends. RESULT: 1 - 3 Shots: 8 | 20 Shots on target: 2 | 8 Possession: 47% - 53% Passes: 384 | 426 Touches: 643 | 707 Interceptions: 129 | 138 Dribbles: 92 | 104
+Match ends. RESULT: 1 - 3 Shots: 8 | 20 Shots on target: 2 | 8 Possession: 47% - 53% Passes: 384 | 426 Touches: 643 | 707 Interceptions: 129 | 138 Dribbles: 92 | 104Match ends. RESULT: 1 - 0 Shots: 18 | 6 Shots on target: 9 | 2 Possession: 49% - 51% Passes: 400 | 428 Touches: 667 | 683 Interceptions: 152 | 138 Dribbles: 89 | 67
+Match ends. RESULT: 0 - 2 Shots: 10 | 18 Shots on target: 3 | 8 Possession: 55% - 45% Passes: 469 | 348 Touches: 744 | 606 Interceptions: 127 | 143 Dribbles: 89 | 74
+Match ends. RESULT: 0 - 1 Shots: 11 | 20 Shots on target: 3 | 8 Possession: 53% - 47% Passes: 456 | 357 Touches: 720 | 630 Interceptions: 135 | 139 Dribbles: 82 | 94
+Match ends. RESULT: 1 - 0 Shots: 12 | 10 Shots on target: 5 | 3 Possession: 51% - 49% Passes: 415 | 393 Touches: 699 | 651 Interceptions: 136 | 134 Dribbles: 106 | 88

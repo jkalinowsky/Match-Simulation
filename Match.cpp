@@ -27,10 +27,10 @@ void Match::printStats() {
     std::cout << " Interceptions: : " << stats[INTERCEPTIONS][HOME] << " | " << stats[INTERCEPTIONS][AWAY];
     std::cout << " Dribbles: : " << stats[DRIBBLES][HOME] << " | " << stats[DRIBBLES][AWAY] << std::endl;
 
-    /*std::cout << "Hometeam heatmap" << std::endl;
+    std::cout << "Hometeam heatmap" << std::endl;
     for (int i = 0; i < 11; i++) {
-        homeTeam->getPlayers()[i]->printHeatmap();
-    }*/
+        awayTeam->getPlayers()[i]->printHeatmap();
+    }
 }
 
 void Match::matchStatsToFile() {
@@ -56,9 +56,9 @@ void Match::matchStatsToFile() {
 }
 
 void Match::playMatch() {
-    // FIRST VERSION - FULL MATCH, WITHOUT EXHAUSTION, PAUSES AND TACTICAL CHANGES
-    int time = 0; // we add 3 seconds per action, match last 5400 seconds so 1800 actions per game
-    Player** ballOwner = &homeTeam->getPlayers()[10];
+    int time = 0;
+    Player** ballOwner = new Player*;
+    (*ballOwner) = &homeTeam->getPlayerIdx(10);
     int ball = HOME;
 
     std::cout << homeTeam->getName() << " - " << awayTeam->getName() << std::endl;

@@ -8,38 +8,38 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"/>
+				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"/>
+				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"/>
+				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="OpenFM">
-				<Option output="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/OpenFM" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"/>
+				<Option output="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/OpenFM" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -53,15 +53,15 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 OpenFM"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 OpenFM"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="OpenFM/fast">
-				<Option output="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/OpenFM" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug"/>
+				<Option output="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/OpenFM" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
@@ -75,41 +75,41 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 OpenFM/fast"/>
-					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 OpenFM/fast"/>
+					<CompileFile command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j16 -f &quot;/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Match.cpp">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Match.cpp">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Match.h">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Match.h">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Player.cpp">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Player.cpp">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Player.h">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Player.h">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Tactic.cpp">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Tactic.cpp">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Tactic.h">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Tactic.h">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Team.cpp">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Team.cpp">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/Team.h">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/Team.h">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/main.cpp">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/main.cpp">
 			<Option target="OpenFM"/>
 		</Unit>
-		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/OpenFM/CMakeLists.txt">
+		<Unit filename="/mnt/c/Users/kubak/Projekty/OpenFM/MatchSimulation/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
