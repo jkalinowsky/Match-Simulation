@@ -1,0 +1,20 @@
+{
+  "name": "gui",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^31.4.0"
+  },
+  "dependencies": {
+    "electron-log": "^5.1.7",
+    "net": "^1.0.2"
+  }
+}

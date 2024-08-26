@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match Stats</title>
+    <script defer src="renderer.js"></script>
+</head>
+<body>
+    <h1>Match Stats</h1>
+    <div class="match-stats">
+        <h1>Match Statistics</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Statistic</th>
+                    <th>Team A</th>
+                    <th>Team B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td id="homeGoals"></td>
+                    <td id="awayGoals"></td>
+                </tr>
+                <tr>
+                    <td>Possession</td>
+                    <td id="homePos"></td>
+                    <td id="awayPos"></td>
+                </tr>
+                <tr>
+                    <td>Shots</td>
+                    <td id="homeShots"></td>
+                    <td id="awayShots"></td>
+                </tr>
+                <tr>
+                    <td>Shots on Target</td>
+                    <td id="homeShotsOT"></td>
+                    <td id="awayShotsOT"></td>
+                </tr>
+                <tr>
+                    <td>Passes</td>
+                    <td id="homePasses"></td>
+                    <td id="awayPasses"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button id="pause-btn">Pause Match</button>
+    <button id="start-btn">Start Match</button>
+    <button id="skip-btn">Skip Match</button>
+</body>
+</html>
