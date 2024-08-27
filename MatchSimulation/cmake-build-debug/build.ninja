@@ -79,6 +79,12 @@ build CMakeFiles/OpenFM.dir/Match.cpp.obj: CXX_COMPILER__OpenFM_unscanned_Debug 
   OBJECT_DIR = CMakeFiles\OpenFM.dir
   OBJECT_FILE_DIR = CMakeFiles\OpenFM.dir
 
+build CMakeFiles/OpenFM.dir/sqlite3.c.obj: C_COMPILER__OpenFM_unscanned_Debug C$:/Users/kubak/Projekty/OpenFM/MatchSimulation/sqlite3.c || cmake_object_order_depends_target_OpenFM
+  DEP_FILE = CMakeFiles\OpenFM.dir\sqlite3.c.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\OpenFM.dir
+  OBJECT_FILE_DIR = CMakeFiles\OpenFM.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target OpenFM
@@ -87,7 +93,7 @@ build CMakeFiles/OpenFM.dir/Match.cpp.obj: CXX_COMPILER__OpenFM_unscanned_Debug 
 #############################################
 # Link the executable OpenFM.exe
 
-build OpenFM.exe: CXX_EXECUTABLE_LINKER__OpenFM_Debug CMakeFiles/OpenFM.dir/main.cpp.obj CMakeFiles/OpenFM.dir/Player.cpp.obj CMakeFiles/OpenFM.dir/Team.cpp.obj CMakeFiles/OpenFM.dir/Tactic.cpp.obj CMakeFiles/OpenFM.dir/Match.cpp.obj
+build OpenFM.exe: CXX_EXECUTABLE_LINKER__OpenFM_Debug CMakeFiles/OpenFM.dir/main.cpp.obj CMakeFiles/OpenFM.dir/Player.cpp.obj CMakeFiles/OpenFM.dir/Team.cpp.obj CMakeFiles/OpenFM.dir/Tactic.cpp.obj CMakeFiles/OpenFM.dir/Match.cpp.obj CMakeFiles/OpenFM.dir/sqlite3.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lWs2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\OpenFM.dir

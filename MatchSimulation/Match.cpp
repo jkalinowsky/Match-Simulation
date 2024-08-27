@@ -14,6 +14,7 @@ Match::Match(Team* team1, Team* team2) : delay(1) {
         stats[i][HOME] = 0;
         stats[i][AWAY] = 0;
     }
+    running = true;
 }
 
 void Match::printStats() {
@@ -248,7 +249,7 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int time) {
                         }
                         else {
                             if (*ball == HOME) {
-                                homeTeam->findNearestPlayer(gk.getFieldSection());
+                                nearest = homeTeam->findNearestPlayer(gk.getFieldSection());
                                 *ball = HOME;
                                 (*ballOwner) = &nearest;
                                 return;
@@ -297,8 +298,24 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int time) {
     else {
         if ((*ballOwner)->shouldIPass()) {
             // passing actions
+
             int passType = (*ballOwner)->choosePassType();
-            Player& passPlayer = (*ballOwner)->choosePlayerForPass(passType);
+            int i = (*ballOwner)->choosePlayerForPass(passType);;
+            if (i == -1) {
+                if (*ball == HOME) {
+                    Player& nearest = homeTeam->findNearestPlayer((*ballOwner)->getFieldSection());
+                    (*ballOwner) = &nearest;
+                    *ball = AWAY;
+                    return;
+                }
+                else {
+                    Player& nearest = awayTeam->findNearestPlayer((*ballOwner)->getFieldSection());
+                    (*ballOwner) = &nearest;
+                    *ball = HOME;
+                    return;
+                }
+            }
+            Player& passPlayer = (*ballOwner)->getTeam()->getPlayerIdx(i);
             if ((*ballOwner)->isPassCompleted(passType)) {
                 if (*ball == HOME) {
                     int index = awayTeam->getPlayerIndexAtFS((*ballOwner)->getFieldSection());

@@ -34,7 +34,7 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 16,
+				"line" : 21,
 				"parent" : 0
 			}
 		]
@@ -64,6 +64,19 @@
 				3,
 				5,
 				7
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -fdiagnostics-color=always"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				9
 			]
 		}
 	],
@@ -109,7 +122,8 @@
 				1,
 				3,
 				5,
-				7
+				7,
+				9
 			]
 		},
 		{
@@ -119,7 +133,8 @@
 				2,
 				4,
 				6,
-				8
+				8,
+				10
 			]
 		}
 	],
@@ -173,6 +188,17 @@
 		{
 			"backtrace" : 1,
 			"path" : "Match.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "sqlite3.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "sqlite3.h",
 			"sourceGroupIndex" : 1
 		}
 	],

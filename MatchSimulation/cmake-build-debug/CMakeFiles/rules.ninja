@@ -12,6 +12,16 @@
 # =============================================================================
 
 #############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__OpenFM_unscanned_Debug
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\PROGRA~1\JETBRA~1\CLION2~1.2\bin\mingw\bin\gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
 # Rule for compiling CXX files.
 
 rule CXX_COMPILER__OpenFM_unscanned_Debug

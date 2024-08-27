@@ -107,7 +107,7 @@ public:
     bool shouldIPass();
     bool didIIntercept();
     int choosePassType();
-    Player& choosePlayerForPass(int passType);
+    int choosePlayerForPass(int passType);
     bool isPassCompleted(int passType);
     bool didIDribble(Player* o);
     void dribble();

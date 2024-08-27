@@ -1254,6 +1254,18 @@
 			"value" : "FALSE"
 		},
 		{
+			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_PostgreSQL",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Details about finding PostgreSQL"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "[C:/Program Files/PostgreSQL/16/lib/libpq.lib][C:/Program Files/PostgreSQL/16/include][c ][v16.4()]"
+		},
+		{
 			"name" : "OpenFM_BINARY_DIR",
 			"properties" : 
 			[
@@ -1288,6 +1300,102 @@
 			],
 			"type" : "STATIC",
 			"value" : "C:/Users/kubak/Projekty/OpenFM/MatchSimulation"
+		},
+		{
+			"name" : "PostgreSQL_INCLUDE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "The Set the PostgreSQL_INCLUDE_DIR cmake cache entry to the top-level directory containing the PostgreSQL include directories. E.g /usr/local/include/PostgreSQL/8.4 or C:/Program Files/PostgreSQL/8.4/include"
+				}
+			],
+			"type" : "PATH",
+			"value" : "C:/Program Files/PostgreSQL/16/include"
+		},
+		{
+			"name" : "PostgreSQL_LIBRARY_DEBUG",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "The Set the PostgreSQL_LIBRARY_DIR cmake cache entry to the top-level directory containing the PostgreSQL libraries."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "PostgreSQL_LIBRARY_DEBUG-NOTFOUND"
+		},
+		{
+			"name" : "PostgreSQL_LIBRARY_RELEASE",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "The Set the PostgreSQL_LIBRARY_DIR cmake cache entry to the top-level directory containing the PostgreSQL libraries."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/Program Files/PostgreSQL/16/lib/libpq.lib"
+		},
+		{
+			"name" : "PostgreSQL_TYPE_INCLUDE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "The Set the PostgreSQL_INCLUDE_DIR cmake cache entry to the top-level directory containing the PostgreSQL include directories. E.g /usr/local/include/PostgreSQL/8.4 or C:/Program Files/PostgreSQL/8.4/include"
+				}
+			],
+			"type" : "PATH",
+			"value" : "C:/Program Files/PostgreSQL/16/include/server"
+		},
+		{
+			"name" : "SQLite3_INCLUDE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a file."
+				}
+			],
+			"type" : "PATH",
+			"value" : "SQLite3_INCLUDE_DIR-NOTFOUND"
+		},
+		{
+			"name" : "SQLite3_LIBRARY",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "SQLite3_LIBRARY-NOTFOUND"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

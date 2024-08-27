@@ -3,7 +3,8 @@ project(OpenFM)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(OpenFM main.cpp
+add_executable(OpenFM
+        main.cpp
         Player.cpp
         Player.h
         Team.cpp
@@ -11,6 +12,12 @@ add_executable(OpenFM main.cpp
         Tactic.cpp
         Tactic.h
         Match.cpp
-        Match.h)
+        Match.h
+        sqlite3.c
+        sqlite3.h
+)
 
-target_link_libraries(OpenFM Ws2_32)
+# Link libraries
+target_link_libraries(OpenFM PRIVATE
+        Ws2_32
+)

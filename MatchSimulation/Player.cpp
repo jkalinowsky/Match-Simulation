@@ -722,7 +722,7 @@ int Player::choosePassType() {
         return LONGPASS;
 }
 
-Player& Player::choosePlayerForPass(int passType) {
+int Player::choosePlayerForPass(int passType) {
     int index = 0;
     Player** avPlayers;
     int* numbers = new int[11];
@@ -758,7 +758,9 @@ Player& Player::choosePlayerForPass(int passType) {
     for (int i = 0; i < 11; i++) {
         numbers[i] = -1;
     }
+    int counter = 0;
     while (index == 0) {
+        counter++;
         avPlayers = t->getPlayersForPass(passType, this);
         int random = rand() % 100;
         if (random <= chances[0]) {
@@ -797,8 +799,10 @@ Player& Player::choosePlayerForPass(int passType) {
                 }
             }
         }
+        if (counter > 15)
+            return -1;
     }
-    return *avPlayers[numbers[rand() % index]];
+    return numbers[rand() % index];
 }
 
 bool Player::isPassCompleted(int passType) {
