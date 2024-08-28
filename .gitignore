@@ -2,3 +2,4 @@
 /MatchSimulation/sqlite3.h
 /MatchSimulation/myapp.exe
 *.txt
+/GUI/node_modules/electron/dist/electron.exe
