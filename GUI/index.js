@@ -5,6 +5,7 @@ const path = require('path');
 
 let mainWindow;
 let client;
+let isConnected = false;
 
 const logFilePath = path.join(__dirname, 'log.txt');
 
@@ -33,27 +34,34 @@ function createWindow() {
 app.whenReady().then(() => {
     createWindow();
 
-    client = new net.Socket();
-    client.connect(27015, '127.0.0.1');
+    ipcMain.on('connect-to-backend', () => {
+        if (!isConnected) {
+            client = new net.Socket();
+            client.connect(27015, '127.0.0.1', () => {
+                isConnected = true;
+                mainWindow.webContents.send('connection-status', 'connected');
+            });
 
-    ipcMain.on('control-match', (event, command) => {
-        client.write(command);
-    });
+            ipcMain.on('control-match', (event, command) => {
+                client.write(command);
+            });
 
-    ipcMain.on('log-message', (event, message) => {
-        logToFile(message);
-    });
+            ipcMain.on('log-message', (event, message) => {
+                logToFile(message);
+            });
 
-    client.on('data', (data) => {
-        mainWindow.webContents.send('update-data', data);
-    });
+            client.on('data', (data) => {
+                mainWindow.webContents.send('update-data', data);
+            });
 
-    client.on('error', (err) => {
-        console.error('Socket error:', err);
-    });
+            client.on('error', (err) => {
+                console.error('Socket error:', err);
+            });
 
-    client.on('close', () => {
-        console.log('Socket closed');
+            client.on('close', () => {
+                console.log('Socket closed');
+            });
+        }
     });
 });
 

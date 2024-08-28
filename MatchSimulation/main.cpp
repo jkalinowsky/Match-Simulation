@@ -80,11 +80,16 @@ int safe_stoi(const std::string& str) {
 Player** loadPlayers(const std::string& teamName, Team* team) {
     sqlite3* db;
     sqlite3_stmt* stmt;
-    std::string query = "SELECT short_name, club_position, age, pace, attacking_finishing, "
-                        "power_long_shots, skill_long_passing, attacking_short_passing, "
-                        "mentality_vision, dribbling, defending, goalkeeping_diving, "
-                        "goalkeeping_handling, goalkeeping_kicking, goalkeeping_positioning, "
-                        "goalkeeping_reflexes FROM players WHERE club_name = '" + teamName + "'";
+
+    std::string query = "SELECT p.short_name, p.club_position, p.age, p.pace, p.attacking_finishing, "
+                        "p.power_long_shots, p.skill_long_passing, p.attacking_short_passing, "
+                        "p.mentality_vision, p.dribbling, p.defending, p.goalkeeping_diving, "
+                        "p.goalkeeping_handling, p.goalkeeping_kicking, p.goalkeeping_positioning, "
+                        "p.goalkeeping_reflexes "
+                        "FROM players p "
+                        "INNER JOIN team_membership tm ON p.short_name = tm.player_name "
+                        "INNER JOIN teams_premier_league t ON tm.team_id = t.team_id "
+                        "WHERE t.team_name = '" + teamName + "'";
 
     if (sqlite3_open("C:\\Users\\kubak\\Projekty\\OpenFM\\database.db", &db) != SQLITE_OK) {
         std::cerr << "Failed to open database\n";
@@ -97,7 +102,6 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
         return nullptr;
     }
 
-    // Bind the team name parameter
     sqlite3_bind_text(stmt, 1, teamName.c_str(), -1, SQLITE_STATIC);
 
     std::vector<Player*> players;
@@ -154,6 +158,7 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
 
     return playerArray;
 }
+
 void serializeStats(int** stats, std::vector<char>& buffer) {
     buffer.resize(9 * 2 * sizeof(int));  // 9 rows * 2 columns * size of int
     char* ptr = buffer.data();

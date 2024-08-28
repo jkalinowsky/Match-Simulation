@@ -183,115 +183,113 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int time) {
                 }
             }
         }
-        else {
-            int playersInBox = awayTeam->getPlayersAtFSNumber((*ballOwner)->getFieldSection());
-            int chance = 0;
-            //chance = 50 - (playersInBox * 10)
-            struct fieldSection fs = (*ballOwner)->getFieldSection();
-            if (fs.x == 2 && fs.y == 9)
-                chance = ((30 - playersInBox * 10)) + 30 + (*ballOwner)->returnAttribute(FINISHING);
-            else if (fs.x >= 1 && fs.x <= 3 && fs.y == 8)
-                chance = ((30 - playersInBox * 10)) + 20 + (*ballOwner)->returnAttribute(FINISHING);
-            else if (((fs.x == 1 || fs.x == 3) && fs.y == 9) || (fs.x >= 1 && fs.x <= 3 && fs.y == 7))
-                chance = ((30 - playersInBox * 10)) + 10 + ((*ballOwner)->returnAttribute(FINISHING) / 2 + (*ballOwner)->returnAttribute(LONGSHOOTING) / 2);
-            else if ((fs.x == 0 || fs.x == 4) && (fs.y >= 6 && fs.y <= 9) || (fs.y <= 6))
-                chance = ((30 - playersInBox * 10)/2) + 5 + (*ballOwner)->returnAttribute(LONGSHOOTING);
-            if (rand() % 100 <= chance) {
-                // on target
-                stats[SHOTS_OT][*ball] += 1;
-                Player& gk = awayTeam->getPlayerIdx(0);
-                if (*ball == AWAY)
-                    gk = homeTeam->getPlayerIdx(0);
+        int playersInBox = awayTeam->getPlayersAtFSNumber((*ballOwner)->getFieldSection());
+        int chance = 0;
+        //chance = 50 - (playersInBox * 10)
+        struct fieldSection fs = (*ballOwner)->getFieldSection();
+        if (fs.x == 2 && fs.y == 9)
+            chance = ((30 - playersInBox * 10)) + 30 + (*ballOwner)->returnAttribute(FINISHING);
+        else if (fs.x >= 1 && fs.x <= 3 && fs.y == 8)
+            chance = ((30 - playersInBox * 10)) + 20 + (*ballOwner)->returnAttribute(FINISHING);
+        else if (((fs.x == 1 || fs.x == 3) && fs.y == 9) || (fs.x >= 1 && fs.x <= 3 && fs.y == 7))
+            chance = ((30 - playersInBox * 10)) + 10 + ((*ballOwner)->returnAttribute(FINISHING) / 2 + (*ballOwner)->returnAttribute(LONGSHOOTING) / 2);
+        else if ((fs.x == 0 || fs.x == 4) && (fs.y >= 6 && fs.y <= 9) || (fs.y <= 6))
+            chance = ((30 - playersInBox * 10)/2) + 5 + (*ballOwner)->returnAttribute(LONGSHOOTING);
+        if (rand() % 100 <= chance) {
+            // on target
+            stats[SHOTS_OT][*ball] += 1;
+            Player& gk = awayTeam->getPlayerIdx(0);
+            if (*ball == AWAY)
+                gk = homeTeam->getPlayerIdx(0);
 
-                if (gk.didISaved(chance)) {
-                    // saved, here is 60% chance to keep ball in gk hands, 25% to corner and 15% to reflection
-                    int gkChance = rand() % 100;
-                    if (gkChance <= 60) {
-                        // gk saved, his ball
-                        if (*ball == HOME) {
-                            *ball = AWAY;
-                            (*ballOwner) = &gk;
-                            return;
-                        }
-                        else {
-                            *ball = HOME;
-                            (*ballOwner) = &gk;
-                            return;
-                        }
-                    }
-                    else if (gkChance <= 85) {
-                        // corner
-                        // TEMPORARY
-                        if (*ball == HOME) {
-                            *ball = AWAY;
-                            (*ballOwner) = &gk;
-                            return;
-                        }
-                        else {
-                            *ball = HOME;
-                            (*ballOwner) = &gk;
-                            return;
-                        }
-                    }
-                    else {
-                        Player& nearest = awayTeam->findNearestPlayer(gk.getFieldSection());
-                        if (rand()%100 <= 60) {
-                            // ball for enemy defender
-                            if (*ball == AWAY) {
-                                nearest = homeTeam->findNearestPlayer(gk.getFieldSection());
-                                *ball = HOME;
-                                (*ballOwner) = &nearest;
-                                return;
-                            }
-                            *ball = AWAY;
-                            (*ballOwner) = &nearest;
-                            return;
-                        }
-                        else {
-                            if (*ball == HOME) {
-                                nearest = homeTeam->findNearestPlayer(gk.getFieldSection());
-                                *ball = HOME;
-                                (*ballOwner) = &nearest;
-                                return;
-                            }
-                            *ball = AWAY;
-                            (*ballOwner) = &nearest;
-                            return;
-                        }
-                    }
-                }
-                else {
-                    // GOAL
-                    std::cout << "GOOOOAAAAL BY " << (*ballOwner)->getName() << " in " << time/60+1 << " minute and xG was: " << chance << std::endl;
-                    stats[GOALS][*ball] += 1;
+            if (gk.didISaved(chance)) {
+                // saved, here is 60% chance to keep ball in gk hands, 25% to corner and 15% to reflection
+                int gkChance = rand() % 100;
+                if (gkChance <= 60) {
+                    // gk saved, his ball
                     if (*ball == HOME) {
-                        (*ballOwner) = &awayTeam->getPlayerIdx(10);
                         *ball = AWAY;
-                        resetPositions();
+                        (*ballOwner) = &gk;
                         return;
                     }
                     else {
-                        (*ballOwner) = &homeTeam->getPlayerIdx(10);
                         *ball = HOME;
-                        resetPositions();
+                        (*ballOwner) = &gk;
+                        return;
+                    }
+                }
+                else if (gkChance <= 85) {
+                    // corner
+                    // TEMPORARY
+                    if (*ball == HOME) {
+                        *ball = AWAY;
+                        (*ballOwner) = &gk;
+                        return;
+                    }
+                    else {
+                        *ball = HOME;
+                        (*ballOwner) = &gk;
+                        return;
+                    }
+                }
+                else {
+                    Player& nearest = awayTeam->findNearestPlayer(gk.getFieldSection());
+                    if (rand()%100 <= 60) {
+                        // ball for enemy defender
+                        if (*ball == AWAY) {
+                            nearest = homeTeam->findNearestPlayer(gk.getFieldSection());
+                            *ball = HOME;
+                            (*ballOwner) = &nearest;
+                            return;
+                        }
+                        *ball = AWAY;
+                        (*ballOwner) = &nearest;
+                        return;
+                    }
+                    else {
+                        if (*ball == HOME) {
+                            nearest = homeTeam->findNearestPlayer(gk.getFieldSection());
+                            *ball = HOME;
+                            (*ballOwner) = &nearest;
+                            return;
+                        }
+                        *ball = AWAY;
+                        (*ballOwner) = &nearest;
                         return;
                     }
                 }
             }
             else {
-                // ball lost, shot off target
-                Player& gk = awayTeam->getPlayerIdx(0);
-                if (*ball == AWAY) {
-                    gk = homeTeam->getPlayerIdx(0);
-                    *ball = HOME;
-                    (*ballOwner) = &gk;
+                // GOAL
+                std::cout << "GOOOOAAAAL BY " << (*ballOwner)->getName() << " in " << time/60+1 << " minute and xG was: " << chance << std::endl;
+                stats[GOALS][*ball] += 1;
+                if (*ball == HOME) {
+                    (*ballOwner) = &awayTeam->getPlayerIdx(10);
+                    *ball = AWAY;
+                    resetPositions();
                     return;
                 }
                 else {
-                    *ball = AWAY;
-                    (*ballOwner) = &gk;
+                    (*ballOwner) = &homeTeam->getPlayerIdx(10);
+                    *ball = HOME;
+                    resetPositions();
                     return;
                 }
+            }
+        }
+        else {
+            // ball lost, shot off target
+            Player& gk = awayTeam->getPlayerIdx(0);
+            if (*ball == AWAY) {
+                gk = homeTeam->getPlayerIdx(0);
+                *ball = HOME;
+                (*ballOwner) = &gk;
+                return;
+            }
+            else {
+                *ball = AWAY;
+                (*ballOwner) = &gk;
+                return;
             }
         }
     }

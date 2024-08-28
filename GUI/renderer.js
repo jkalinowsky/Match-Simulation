@@ -27,39 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    document.getElementById('pause-btn')?.addEventListener('click', () => {
-        window.api.controlMatch('PAUSE');
+    document.getElementById('connectButton').addEventListener('click', () => {
+        window.api.connectToBackend();
     });
 
-    document.getElementById('start-btn')?.addEventListener('click', () => {
-        window.api.controlMatch('START');
-    });
-
-    document.getElementById('skip-btn')?.addEventListener('click', () => {
-        window.api.controlMatch('SKIP');
-    });
-
-    setInterval(() => {
-        if (window.api) {
-            window.api.controlMatch('GET_STATS');
+    window.api.onConnectionStatus((status) => {
+        if (status === 'connected') {
+            window.location.href = 'match.html';
+        } else {
+            document.getElementById('status').textContent = `Status: ${status}`;
         }
-    }, 5000);
-
-    window.api.onUpdateData((data) => {
-        const uint8Array = objectToUint8Array(data);
-        const stats = deserializeStats(uint8Array);
-
-        let homePos = Math.round(stats[14] / (stats[14] + stats[15]))
-
-        document.getElementById("homeGoals").innerHTML = stats[0];
-        document.getElementById("awayGoals").innerHTML = stats[1];
-        document.getElementById("homePos").innerHTML = homePos + "%";
-        document.getElementById("awayPos").innerHTML = (100-homePos) + "%";
-        document.getElementById("homeShots").innerHTML = stats[2];
-        document.getElementById("awayShots").innerHTML = stats[3];
-        document.getElementById("homeShotsOT").innerHTML = stats[4];
-        document.getElementById("awayShotsOT").innerHTML = stats[5];
-        document.getElementById("homePasses").innerHTML = stats[12];
-        document.getElementById("awayPasses").innerHTML = stats[13];
     });
 });
