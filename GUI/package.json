@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "electron-log": "^5.1.7",
-    "net": "^1.0.2"
+    "net": "^1.0.2",
+    "sqlite3": "^5.1.7"
   }
 }

@@ -21,14 +21,38 @@ function deserializeStats(buffer) {
     return stats;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     if (!window.api) {
         logToFile('API is not available in the window object.');
         return;
     }
 
+    const rows = await window.api.getTeams();
+
+    const team1Select = document.getElementById('team1');
+    const team2Select = document.getElementById('team2');
+
+    rows.forEach(row => {
+        // Create separate option elements for each select
+        const option = document.createElement('option');
+        option.value = row.team_name; // Use the actual team_name
+        option.textContent = row.team_name;
+
+        // Append the options to both selects
+        team1Select.appendChild(option.cloneNode(true)); // Clone for the second select
+        team2Select.appendChild(option);
+    });
+
     document.getElementById('connectButton').addEventListener('click', () => {
-        window.api.connectToBackend();
+        const team1 = document.getElementById('team1').value;
+        const team2 = document.getElementById('team2').value;
+
+        if (!team1 || !team2 && team1 === team2) {
+            alert('Please select both teams!');
+            return;
+        }
+
+        window.api.connectToBackend(team1, team2);
     });
 
     window.api.onConnectionStatus((status) => {

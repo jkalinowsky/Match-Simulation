@@ -10,6 +10,9 @@
 #include <cstring>
 #include <cstdlib>
 #include "sqlite3.h"
+#include "json.hpp"
+
+std::atomic<bool> matchCompleted(false);
 
 #if defined(_WIN32) || defined(_WIN64)
     #include <winsock2.h>
@@ -155,49 +158,96 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
             playerArray[i] = nullptr;
         }
     }
-
+    std::sort(playerArray, playerArray + 11, [](const Player* a, const Player* b) {
+        return a->getPosition().positionDetails < b->getPosition().positionDetails;
+    });
     return playerArray;
 }
 
-void serializeStats(int** stats, std::vector<char>& buffer) {
-    buffer.resize(9 * 2 * sizeof(int));  // 9 rows * 2 columns * size of int
-    char* ptr = buffer.data();
+void sendStatsAsJson(int** stats, int numRows, int numCols, int clientSocket) {
+    nlohmann::json jsonStats;
 
-    // Copy each int into the buffer
-    for (int i = 0; i < 9; ++i) {
-        memcpy(ptr, stats[i], 2 * sizeof(int));
-        ptr += 2 * sizeof(int);
+    // Populate the JSON object with stats data
+    for (int i = 0; i < numRows; ++i) {
+        nlohmann::json row;
+        for (int j = 0; j < numCols; ++j) {
+            row.push_back(stats[i][j]);
+        }
+        jsonStats.push_back(row);
     }
+
+    std::string jsonString = jsonStats.dump();
+
+    std::cout << jsonString;
+
+    send(clientSocket, jsonString.c_str(), jsonString.size(), 0);
 }
 
 void handleClient(SOCKET_TYPE clientSocket, Match* match) {
     char buffer[512];
     int recvResult;
+    bool setupDone = false;
 
     std::vector<char> binaryData;
 
     while ((recvResult = recv(clientSocket, buffer, sizeof(buffer), 0)) > 0) {
         std::string command(buffer, recvResult);
 
+        if (!setupDone) {
+            try {
+                auto j = nlohmann::json::parse(command);
+                if (j.contains("team1") && j.contains("team2")) {
+                    std::string team1_n = j["team1"];
+                    std::string team2_n = j["team2"];
+
+                    Tactic* posBased = new Tactic("Tactic", 1, 2, 0, 2, 2, 2, 2, 4, 4, 2);
+
+                    Team* team1 = new Team(team1_n);
+                    team1->setPlayers(loadPlayers(team1_n, team1));
+                    team1->setTactic(posBased);
+
+                    Team* team2 = new Team(team2_n);
+                    team2->setPlayers(loadPlayers(team2_n, team2));
+                    team2->setTactic(posBased);
+
+                    match->setHomeTeam(team1);
+                    match->setAwayTeam(team2);
+
+                    std::thread matchThread([match]() {
+                        match->playMatch();
+                        matchCompleted.store(true);
+                    });
+                    matchThread.detach();
+
+                    setupDone = true;
+                } else {
+                    std::cerr << "Invalid JSON format. Missing team1 or team2." << std::endl;
+                }
+            } catch (const nlohmann::json::exception& e) {
+                std::cerr << "JSON parsing error: " << e.what() << std::endl;
+            }
+        }
+
         if (command == "GET_STATS") {
             int** stats = match->getStats();
-            serializeStats(stats, binaryData);
-
-            send(clientSocket, binaryData.data(), binaryData.size(), 0);
+            int numRows = 9;
+            int numCols = 2;
+            sendStatsAsJson(stats, numRows, numCols, clientSocket);
         } else {
             match->handleClientCommand(command);
-            send(clientSocket, "ACK", 3, 0); // Acknowledge receipt
+            send(clientSocket, "ACK", 3, 0);
         }
     }
 
-    #if defined(_WIN32) || defined(_WIN64)
-        CLOSE_SOCKET(clientSocket);
-    #else
-        CLOSE_SOCKET(clientSocket);
-    #endif
+#if defined(_WIN32) || defined(_WIN64)
+    CLOSE_SOCKET(clientSocket);
+#else
+    CLOSE_SOCKET(clientSocket);
+#endif
 }
 
 int main() {
+    srand(time(0));
     #if defined(_WIN32) || defined(_WIN64)
         WSADATA wsaData;
         SOCKET ListenSocket = INVALID_SOCKET;
@@ -283,30 +333,6 @@ int main() {
         }
     #endif
 
-
-    srand(time(0));
-    Tactic* posBased = new Tactic("Tactic", 1, 2, 0, 2, 2, 2, 2, 4, 4, 2);
-    Tactic* longBased = new Tactic("Tactic", 4, 2, 1, 2, 2, 2, 2, 4, 4, 2);
-
-    // loading manchester city
-    Team* manC = new Team("Manchester City");
-    Player** players = loadPlayers("Manchester City", manC);
-    std::sort(players, players + 11, [](const Player* a, const Player* b) {
-        return a->getPosition().positionDetails < b->getPosition().positionDetails;
-    });
-    manC->setPlayers(players);
-
-    // loading arsenal
-    Team* arsenal = new Team("Arsenal");
-    players = loadPlayers("Arsenal", arsenal);
-    std::sort(players, players + 11, [](const Player* a, const Player* b) {
-        return a->getPosition().positionDetails < b->getPosition().positionDetails;
-    });
-    arsenal->setPlayers(players);
-
-    manC->setTactic(posBased);
-    arsenal->setTactic(posBased);
-
     std::cout << "Waiting for a connection..." << std::endl;
 
     #if defined(_WIN32) || defined(_WIN64)
@@ -329,12 +355,18 @@ int main() {
 
     std::cout << "Client connected." << std::endl;
 
-    Match* match = new Match(manC, arsenal);
+    Match* match = new Match();
 
     std::thread clientThread(handleClient, ClientSocket, match);
-    clientThread.detach();
 
-    match->playMatch();
+    while (true) {
+        if (matchCompleted.load()) {
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+
+    clientThread.join();
     std::this_thread::sleep_for(std::chrono::seconds(5));
 
     CLOSE_SOCKET(ListenSocket);

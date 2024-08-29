@@ -24,16 +24,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
 
     window.api.onUpdateData((data) => {
-        logToFile(data);
-        const uint8Array = objectToUint8Array(data);
-        const stats = deserializeStats(uint8Array);
+        // statystyki nie dzialaja?
+        let stats;
+        stats = JSON.parse(data);
 
-        let homePos = Math.round(stats[14] * 100 / (stats[14] * 100 + stats[15] * 100) * 100)
+        let homePos = Math.round(stats[14] * 100 / (stats[14] * 100 + stats[15] * 100) * 100);
 
         document.getElementById("homeGoals").innerHTML = stats[0];
         document.getElementById("awayGoals").innerHTML = stats[1];
         document.getElementById("homePos").innerHTML = homePos + "%";
-        document.getElementById("awayPos").innerHTML = (100-homePos) + "%";
+        document.getElementById("awayPos").innerHTML = (100 - homePos) + "%";
         document.getElementById("homeShots").innerHTML = stats[2];
         document.getElementById("awayShots").innerHTML = stats[3];
         document.getElementById("homeShotsOT").innerHTML = stats[4];

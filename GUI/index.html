@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Electron App</title>
+    <title>OpenFm</title>
 </head>
 <body>
-<h1>Electron App</h1>
-<button id="connectButton">Start match</button>
-<p id="status">Status: Disconnected</p>
+    <h1>Choose team to simulation</h1>
+    <label for="team1">Team 1:</label>
+    <select id="team1">
+    </select>
 
-<script src="renderer.js"></script>
+    <label for="team2">Team 2:</label>
+    <select id="team2">
+    </select>
+    <button id="connectButton">Start match</button>
+    <p id="status">Status: Disconnected</p>
+
+    <script src="renderer.js"></script>
 </body>
 </html>

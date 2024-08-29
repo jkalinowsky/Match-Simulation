@@ -28,6 +28,10 @@ private:
     std::chrono::seconds delay;
 public:
     Match(Team* team1, Team* team2);
+    Match();
+
+    void setHomeTeam(Team* team);
+    void setAwayTeam(Team* team);
 
     void pauseMatch();
     void resumeMatch();

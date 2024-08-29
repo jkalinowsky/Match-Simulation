@@ -17,6 +17,23 @@ Match::Match(Team* team1, Team* team2) : delay(1) {
     running = true;
 }
 
+Match::Match() : delay(1) {
+    for (int i = 0; i < 9; i++) {
+        stats[i] = new int[2];
+        stats[i][HOME] = 0;
+        stats[i][AWAY] = 0;
+    }
+    running = true;
+}
+
+void Match::setHomeTeam(Team *team) {
+    homeTeam = team;
+}
+
+void Match::setAwayTeam(Team *team) {
+    awayTeam = team;
+}
+
 void Match::printStats() {
     int homePos = static_cast<int>((static_cast<double>(stats[TOUCHES][HOME]) / (stats[TOUCHES][AWAY] + stats[TOUCHES][HOME])) * 100);
     std::cout << "Match ends. RESULT: " << stats[GOALS][HOME] << " - " << stats[GOALS][AWAY];
