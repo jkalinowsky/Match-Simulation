@@ -2,20 +2,25 @@
   "name": "gui",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite build && electron ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.2",
     "electron": "^31.4.0"
   },
   "dependencies": {
     "electron-log": "^5.1.7",
     "net": "^1.0.2",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "vite": "^5.4.2",
+    "vue": "^3.4.38",
+    "vue-router": "^4.4.3"
   }
 }

@@ -164,10 +164,9 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
     return playerArray;
 }
 
-void sendStatsAsJson(int** stats, int numRows, int numCols, int clientSocket) {
+void sendStatsAsJson(int** stats, int numRows, int numCols, SOCKET_TYPE clientSocket) {
     nlohmann::json jsonStats;
 
-    // Populate the JSON object with stats data
     for (int i = 0; i < numRows; ++i) {
         nlohmann::json row;
         for (int j = 0; j < numCols; ++j) {
@@ -177,8 +176,6 @@ void sendStatsAsJson(int** stats, int numRows, int numCols, int clientSocket) {
     }
 
     std::string jsonString = jsonStats.dump();
-
-    std::cout << jsonString;
 
     send(clientSocket, jsonString.c_str(), jsonString.size(), 0);
 }
