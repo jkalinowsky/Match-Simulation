@@ -69,17 +69,6 @@ std::vector<std::string> split(const std::string& str, char delimiter) {
     return tokens;
 }
 
-int safe_stoi(const std::string& str) {
-    if (str.empty()) {
-        return rand() % 10 + 1;
-    }
-    try {
-        return std::stoi(str);
-    } catch (const std::invalid_argument&) {
-        return rand() % 10 + 1;
-    }
-}
-
 Player** loadPlayers(const std::string& teamName, Team* team) {
     sqlite3* db;
     sqlite3_stmt* stmt;
@@ -164,6 +153,51 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
     return playerArray;
 }
 
+Tactic* loadTactic(const std::string& teamName) {
+    sqlite3* db;
+    sqlite3_stmt* stmt;
+
+    std::string query = "SELECT tactic_mentality, tactic_tempo, tactic_passing_style, "
+                        "tactic_work_rate, tactic_width, tactic_pressing_line, tactic_strictness, "
+                        "formation_defenders, formation_midfielders, formation_attackers "
+                        "FROM teams_premier_league WHERE team_name = '" + teamName + "'";
+
+
+
+    if (sqlite3_open("C:\\Users\\kubak\\Projekty\\OpenFM\\database.db", &db) != SQLITE_OK) {
+        std::cerr << "Failed to open database\n";
+        return nullptr;
+    }
+
+    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cerr << "Failed to prepare statement\n";
+        sqlite3_close(db);
+        return nullptr;
+    }
+
+    sqlite3_bind_text(stmt, 1, teamName.c_str(), -1, SQLITE_STATIC);
+
+
+    int mentality, tempo, passingStyle, workRate, width, pressingLine, strictness, f1, f2, f3;
+    mentality = sqlite3_column_int(stmt, 0);
+    tempo = sqlite3_column_int(stmt, 1);
+    workRate = sqlite3_column_int(stmt, 2);
+    width = sqlite3_column_int(stmt, 3);
+    pressingLine = sqlite3_column_int(stmt, 4);
+    strictness = sqlite3_column_int(stmt, 5);
+    f1 = sqlite3_column_int(stmt, 6);
+    f2 = sqlite3_column_int(stmt, 7);
+    f3 = sqlite3_column_int(stmt, 8);
+
+    sqlite3_finalize(stmt);
+    sqlite3_close(db);
+
+    Tactic* newTactic = new Tactic(mentality, tempo, passingStyle, workRate, width, pressingLine, strictness, f1, f2, f3);
+
+
+    return newTactic;
+}
+
 void sendStatsAsJson(int** stats, int numRows, int numCols, SOCKET_TYPE clientSocket) {
     nlohmann::json jsonStats;
 
@@ -176,8 +210,20 @@ void sendStatsAsJson(int** stats, int numRows, int numCols, SOCKET_TYPE clientSo
     }
 
     std::string jsonString = jsonStats.dump();
-
     send(clientSocket, jsonString.c_str(), jsonString.size(), 0);
+}
+
+void sendStatsPeriodically(SOCKET_TYPE clientSocket, Match* match) {
+    int time = 0;
+    while(true) {
+        int** stats = match->getStats();
+        if (stats[TIME][0] - time > 20 ) {
+            int numRows = 9;
+            int numCols = 2;
+            sendStatsAsJson(stats, numRows, numCols, clientSocket);
+            time = stats[TIME][0];
+        }
+    }
 }
 
 void handleClient(SOCKET_TYPE clientSocket, Match* match) {
@@ -197,15 +243,13 @@ void handleClient(SOCKET_TYPE clientSocket, Match* match) {
                     std::string team1_n = j["team1"];
                     std::string team2_n = j["team2"];
 
-                    Tactic* posBased = new Tactic("Tactic", 1, 2, 0, 2, 2, 2, 2, 4, 4, 2);
-
                     Team* team1 = new Team(team1_n);
                     team1->setPlayers(loadPlayers(team1_n, team1));
-                    team1->setTactic(posBased);
+                    team1->setTactic(loadTactic(team1_n));
 
                     Team* team2 = new Team(team2_n);
                     team2->setPlayers(loadPlayers(team2_n, team2));
-                    team2->setTactic(posBased);
+                    team2->setTactic(loadTactic(team1_n));
 
                     match->setHomeTeam(team1);
                     match->setAwayTeam(team2);
@@ -225,15 +269,8 @@ void handleClient(SOCKET_TYPE clientSocket, Match* match) {
             }
         }
 
-        if (command == "GET_STATS") {
-            int** stats = match->getStats();
-            int numRows = 9;
-            int numCols = 2;
-            sendStatsAsJson(stats, numRows, numCols, clientSocket);
-        } else {
-            match->handleClientCommand(command);
-            send(clientSocket, "ACK", 3, 0);
-        }
+        match->handleClientCommand(command);
+        send(clientSocket, "ACK", 3, 0);
     }
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -355,6 +392,7 @@ int main() {
     Match* match = new Match();
 
     std::thread clientThread(handleClient, ClientSocket, match);
+    std::thread statsThread(sendStatsPeriodically, ClientSocket, match);
 
     while (true) {
         if (matchCompleted.load()) {

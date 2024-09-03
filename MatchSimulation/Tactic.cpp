@@ -1,8 +1,7 @@
 #include "Tactic.h"
 
-Tactic::Tactic(const std::string &name, int mentality, int tempo, int passingStyle, int workRate, int width,
+Tactic::Tactic(int mentality, int tempo, int passingStyle, int workRate, int width,
                int pressingLine, int strictness, int defenders, int midfielders, int attackers) {
-    this->name = name;
     this->mentality = mentality;
     this->tempo = tempo;
     this->passingStyle = passingStyle;

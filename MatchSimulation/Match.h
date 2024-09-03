@@ -10,22 +10,25 @@
 
 #define HOME 0
 #define AWAY 1
-#define GOALS 0
-#define SHOTS 1
-#define SHOTS_OT 2 // on target
-#define CORNERS 3
-#define R_CARDS 4
-#define DRIBBLES 5
-#define PASSES 6
-#define TOUCHES 7
-#define INTERCEPTIONS 8
+#define TIME 0
+#define GOALS 1
+#define SHOTS 2
+#define SHOTS_OT 3 // on target
+#define CORNERS 4
+#define R_CARDS 5
+#define DRIBBLES 6
+#define PASSES 7
+#define TOUCHES 8
+#define INTERCEPTIONS 9
 
 class Match {
 private:
     Team* homeTeam, *awayTeam;
-    int* stats[9];
+    int* stats[10];
+    int* homeStats[11];
+    int* awayStats[11];
     std::atomic<bool> running;
-    std::chrono::seconds delay;
+    std::chrono::milliseconds delay;
 public:
     Match(Team* team1, Team* team2);
     Match();
@@ -36,14 +39,17 @@ public:
     void pauseMatch();
     void resumeMatch();
     void skipMatch();
+    void firstSpeed();
+    void secondSpeed();
+    void thirdSpeed();
     void handleClientCommand(const std::string& command);
     int** getStats();
     void printStats();
     void matchStatsToFile();
     void playMatch();
-    void attackAction(Team* team, Player** ballOwner, int* ball, int time);
+    void attackAction(Team* team, Player** ballOwner, int* ball);
     void defenceAction(Team* team, Player** ballOwner);
-    void actionWithBall(Player** ballOwner, int* ball, int time);
+    void actionWithBall(Player** ballOwner, int* ball, int idx);
     void resetPositions();
 };
 

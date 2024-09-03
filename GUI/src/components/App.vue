@@ -1,35 +1,39 @@
 <template>
-  <div>
-    <h1>Choose team to simulation</h1>
-
+  <v-container>
+    <h1>Welcome to v. 1.0 of OpenFm match simulation!</h1>
+    <p>Here u can select your favorite team and simulate match. Actually u can't change players or tactic.</p>
+  </v-container>
+  <v-container>
+    <h3>Choose team to simulation</h3>
     <label for="team1">Team 1:</label>
-    <select id="team1" v-model="selectedTeam1">
-      <option v-for="team in teams" :key="team.team_name" :value="team.team_name">
-        {{ team.team_name }}
-      </option>
-    </select>
+    <v-select
+        id="team1" label="Select first team" v-model="selectedTeam1" :items="teamNames" variant="solo-filled"
+    ></v-select>
 
     <label for="team2">Team 2:</label>
-    <select id="team2" v-model="selectedTeam2">
-      <option v-for="team in teams" :key="team.team_name" :value="team.team_name">
-        {{ team.team_name }}
-      </option>
-    </select>
+    <v-select
+        id="team2" label="Select second team" v-model="selectedTeam2" :items="teamNames" variant="solo-filled"
+    ></v-select>
 
-    <router-link to="/match" @click="startMatch">Start match</router-link>
-    <p id="status">Status: {{ connectionStatus }}</p>
-  </div>
+    <v-btn @click="startMatch">
+      Start match
+    </v-btn>
+  </v-container>
 </template>
 
 <script>
 
 export default {
+  computed: {
+    teamNames() {
+      return this.teams.map(team => team.team_name);
+    }
+  },
   data() {
     return {
       teams: [],
       selectedTeam1: '',
       selectedTeam2: '',
-      connectionStatus: 'Disconnected',
     };
   },
   async mounted() {
@@ -43,10 +47,6 @@ export default {
     } catch (error) {
       console.log('Failed to fetch teams:', error);
     }
-
-    window.api.onConnectionStatus((status) => {
-      this.connectionStatus = status;
-    });
   },
   methods: {
     startMatch() {
@@ -54,6 +54,9 @@ export default {
         alert('Please select both teams!');
         return;
       }
+      localStorage.setItem('teamA', this.selectedTeam1);
+      localStorage.setItem('teamB', this.selectedTeam2);
+      this.$router.push({ path: '/match'});
       window.location.href='../dist/match.html';
       window.api.connectToBackend(this.selectedTeam1, this.selectedTeam2);
     }

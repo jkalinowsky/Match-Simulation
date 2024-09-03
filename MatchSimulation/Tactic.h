@@ -9,7 +9,7 @@ private:
     int formation[3];
 
 public:
-    Tactic(const std::string& name, int mentality, int tempo, int passingStyle,
+    Tactic(int mentality, int tempo, int passingStyle,
            int workRate, int width, int pressingLine, int strictness, int defenders, int midfielders, int attackers);
     void setMentality(int newMentality);
     int getMentality() const;
