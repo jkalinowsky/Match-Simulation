@@ -21,6 +21,8 @@ function createWindow() {
         }
     });
 
+    mainWindow.maximize();
+
     mainWindow.loadFile(path.join(__dirname, 'dist', 'index.html'));
 }
 
@@ -43,7 +45,24 @@ app.whenReady().then(() => {
             });
 
             client.on('data', (data) => {
-                mainWindow.webContents.send('update-data', data);
+                let dataString = data.toString();
+                if (dataString.endsWith("ACK")) {
+                    dataString = dataString.slice(0, -3); // removing ACK from the end
+                }
+                try {
+                    const parsedData = JSON.parse(dataString);
+                    if (parsedData.type === 'match-stats') {
+                        console.log('Received match stats');
+                        mainWindow.webContents.send('update-data', parsedData);
+                    }
+                    else if (parsedData.type === 'player-stats') {
+                        console.log('Received player stats');
+                        mainWindow.webContents.send('player-data', parsedData);
+                    }
+                }
+                catch (error) {
+                    console.error('Error parsing received data ', error);
+                }
             });
 
             client.on('error', (err) => {
@@ -60,14 +79,79 @@ app.whenReady().then(() => {
         return new Promise((resolve, reject) => {
             const db = new sqlite3.Database(dbPath);
 
-            db.all('SELECT team_name FROM teams_premier_league', [], (err, rows) => {
+            db.all(
+                `
+                    SELECT team_name
+                    FROM teams_premier_league
+                    `,
+                [], (err, rows) => {
                 if (err) {
+                    console.error(err.message);
                     reject(err);
                 } else {
                     resolve(rows);
                 }
                 db.close();
             });
+        })
+    })
+
+    ipcMain.handle('get-players', async(event, team1, team2) => {
+        return new Promise((resolve, reject) => {
+            const db = new sqlite3.Database(dbPath);
+
+            db.all(`
+                      SELECT p.short_name
+                      FROM team_membership tm
+                      INNER JOIN teams_premier_league tp
+                        ON tm.team_id = tp.team_id
+                      INNER JOIN players p
+                        ON tm.player_name = p.short_name
+                      WHERE (tp.team_name = ? OR tp.team_name = ?)
+                      AND p.is_first_squad = 'True'
+                      ORDER BY 
+                        CASE 
+                            WHEN tp.team_name = ? THEN 1
+                            WHEN tp.team_name = ? THEN 2
+                        END,
+                      p.first_position ASC;
+                    `,
+                [team1, team2, team1, team2], (err, rows) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }else {
+                    resolve(rows);
+                }
+            });
+
+            db.close();
+        })
+    })
+
+    ipcMain.handle('get-player', async(event, player) => {
+        return new Promise((resolve, reject) => {
+            const db = new sqlite3.Database(dbPath);
+
+            db.all(`
+                        SELECT age, nationality_name, pace, attacking_finishing, power_long_shots,
+                         dribbling, defending, attacking_short_passing, skill_long_passing, mentality_vision,
+                        goalkeeping_diving, goalkeeping_handling, goalkeeping_kicking, goalkeeping_positioning,
+                        goalkeeping_reflexes, first_position, second_position
+                        FROM players
+                        WHERE short_name = ?
+            `,
+            [player], (err, rows) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+                else {
+                    resolve(rows[0]);
+                }
+                });
+
+            db.close();
         })
     })
 });

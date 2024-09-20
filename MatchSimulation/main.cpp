@@ -7,11 +7,9 @@
 #include <thread>
 #include <atomic>
 #include <chrono>
-#include <cstring>
 #include <cstdlib>
 #include "sqlite3.h"
 #include "json.hpp"
-
 std::atomic<bool> matchCompleted(false);
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -39,19 +37,6 @@ std::atomic<bool> matchCompleted(false);
 #pragma comment(lib, "Ws2_32.lib")
 // first version of match simulation based on own algorithm and model
 
-PositionDetails stringToPosition(const std::string& positionStr) {
-    if (positionStr == "ST") return ST;
-    else if (positionStr == "LW" || positionStr == "LF" || positionStr == "LM") return LF;
-    else if (positionStr == "RW" || positionStr == "RF" || positionStr == "RM") return RF;
-    else if (positionStr == "CAM" || positionStr == "CF") return CAM;
-    else if (positionStr == "CM" || positionStr == "LCM" || positionStr == "RCM") return CM;
-    else if (positionStr == "CDM" || positionStr == "RDM" || positionStr == "LDM") return DM;
-    else if (positionStr == "RWB" || positionStr == "RB") return RB;
-    else if (positionStr == "LWB" || positionStr == "LB") return LB;
-    else if (positionStr == "CB" || positionStr == "LCB" || positionStr == "RCB") return CB;
-    else if (positionStr == "GK") return GK;
-}
-
 PositionType choosePosType(PositionDetails posD) {
     if (posD == GK) return GOALKEEPER;
     else if (posD == LB || posD == CB || posD == RB) return DEF;
@@ -69,11 +54,40 @@ std::vector<std::string> split(const std::string& str, char delimiter) {
     return tokens;
 }
 
-Player** loadPlayers(const std::string& teamName, Team* team) {
+PositionDetails returnPosition(int pos) {
+    switch (pos) {
+        case -1:
+            return NONE;
+        case 0:
+            return GK;
+        case 1:
+            return LB;
+        case 2:
+            return CB;
+        case 3:
+            return RB;
+        case 4:
+            return DM;
+        case 5:
+            return CM;
+        case 6:
+            return CAM;
+        case 7:
+            return LF;
+        case 8:
+            return ST;
+        case 9:
+            return RF;
+        default:
+            return NONE;
+    }
+}
+
+void loadPlayers(const std::string& teamName, Team* team) {
     sqlite3* db;
     sqlite3_stmt* stmt;
 
-    std::string query = "SELECT p.short_name, p.club_position, p.age, p.pace, p.attacking_finishing, "
+    std::string query = "SELECT p.short_name, p.first_position, p.second_position, p.is_first_squad, p.age, p.pace, p.attacking_finishing, "
                         "p.power_long_shots, p.skill_long_passing, p.attacking_short_passing, "
                         "p.mentality_vision, p.dribbling, p.defending, p.goalkeeping_diving, "
                         "p.goalkeeping_handling, p.goalkeeping_kicking, p.goalkeeping_positioning, "
@@ -83,74 +97,89 @@ Player** loadPlayers(const std::string& teamName, Team* team) {
                         "INNER JOIN teams_premier_league t ON tm.team_id = t.team_id "
                         "WHERE t.team_name = '" + teamName + "'";
 
-    if (sqlite3_open("C:\\Users\\kubak\\Projekty\\OpenFM\\database.db", &db) != SQLITE_OK) {
+
+    if (sqlite3_open("../../database.db", &db) != SQLITE_OK) {
         std::cerr << "Failed to open database\n";
-        return nullptr;
+        return;
     }
 
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK) {
         std::cerr << "Failed to prepare statement\n";
         sqlite3_close(db);
-        return nullptr;
+        return;
     }
 
     sqlite3_bind_text(stmt, 1, teamName.c_str(), -1, SQLITE_STATIC);
 
-    std::vector<Player*> players;
+    std::vector<Player*> firstPlayers;
+    std::vector<Player*> benchPlayers;
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        if (players.size() >= 11) break;
+        const char* nameText = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
+        std::string name = (nameText ? nameText : "");
+        const char* isFirstSquadText = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3));
+        std::string isFirstSquadStr = (isFirstSquadText ? isFirstSquadText : "");
 
-        std::string name = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 0));
-        std::string posStr = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1));
-        if (posStr != "SUB" && posStr != "RES") {
-            PositionDetails posD = stringToPosition(posStr);
-            PositionType posT = choosePosType(posD);
-            Position pos = {posD, posT};
-            int age = sqlite3_column_int(stmt, 2) / 4;
-            int pace = sqlite3_column_int(stmt, 3) / 4;
-            int finishing = sqlite3_column_int(stmt, 4) / 4;
-            int longs = sqlite3_column_int(stmt, 5) / 4;
-            int longp = sqlite3_column_int(stmt, 6) / 4;
-            int shortp = sqlite3_column_int(stmt, 7) / 4;
-            int vis = sqlite3_column_int(stmt, 8) / 4;
-            int drib = sqlite3_column_int(stmt, 9) / 4;
-            int def = sqlite3_column_int(stmt, 10) / 4;
+        int firstPosition = sqlite3_column_int(stmt, 1);
+        bool isFirstSquad;
+        if (isFirstSquadStr == "True")
+            isFirstSquad = true;
+        else
+            isFirstSquad = false;
 
-            int gk_d = sqlite3_column_int(stmt, 11) / 4;
-            int gk_h = sqlite3_column_int(stmt, 12) / 4;
-            int gk_k = sqlite3_column_int(stmt, 13) / 4;
-            int gk_p = sqlite3_column_int(stmt, 14) / 4;
-            int gk_r = sqlite3_column_int(stmt, 15) / 4;
+        PositionDetails posD = returnPosition(firstPosition);
+        PositionType posT = choosePosType(posD);
+        Position pos = {posD, posT};
+        int age = sqlite3_column_int(stmt, 4);
+        int pace = sqlite3_column_int(stmt, 5);
+        int finishing = sqlite3_column_int(stmt, 6);
+        int longs = sqlite3_column_int(stmt, 7);
+        int longp = sqlite3_column_int(stmt, 8);
+        int shortp = sqlite3_column_int(stmt, 9);
+        int vis = sqlite3_column_int(stmt, 10);
+        int drib = sqlite3_column_int(stmt, 11);
+        int def = sqlite3_column_int(stmt, 12);
 
-            Player* player;
-            if (posD == GK) {
-                player = new Player(name, team, pos, age, pace, finishing, longs, shortp, longp, vis, drib, def,
-                                    gk_d, gk_h, gk_k, gk_p, gk_r);
-            } else {
-                player = new Player(name, team, pos, age, pace, finishing, longs, shortp, longp, vis, drib, def,
-                                    0, 0, 0, 0, 0);
-            }
-            players.push_back(player);
+        int gk_d = sqlite3_column_int(stmt, 13);
+        int gk_h = sqlite3_column_int(stmt, 14);
+        int gk_k = sqlite3_column_int(stmt, 15);
+        int gk_p = sqlite3_column_int(stmt, 16);
+        int gk_r = sqlite3_column_int(stmt, 17);
+
+        Player* player;
+        player = new Player(name, team, pos, age, pace, finishing, longs, shortp,
+                            longp, vis, drib, def,
+                            gk_d, gk_h, gk_k, gk_p, gk_r);
+
+        if (isFirstSquad) {
+            firstPlayers.push_back(player);
         }
+        else
+            benchPlayers.push_back(player);
     }
 
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 
-    Player** playerArray = new Player*[players.size()];
-    for (size_t i = 0; i < players.size(); ++i) {
-        playerArray[i] = players[i];
+    Player** firstArray = new Player*[11]();
+    for (size_t i = 0; i < 11; ++i) {
+        firstArray[i] = firstPlayers[i];
     }
 
-    if (players.size() < 11) {
-        for (size_t i = players.size(); i < 11; ++i) {
-            playerArray[i] = nullptr;
-        }
-    }
-    std::sort(playerArray, playerArray + 11, [](const Player* a, const Player* b) {
+    std::sort(firstArray, firstArray + 11, [](const Player* a, const Player* b) {
         return a->getPosition().positionDetails < b->getPosition().positionDetails;
     });
-    return playerArray;
+    team->setPlayers(firstArray);
+    Player** benchArray = new Player*[9]();
+    for (size_t i = 0; i < 9; ++i) {
+        benchArray[i] = benchPlayers[i];
+    }
+    std::sort(benchArray, benchArray + 9, [](const Player* a, const Player* b) {
+        return a->getPosition().positionDetails < b->getPosition().positionDetails;
+    });
+    team->setBenchPlayers(benchArray);
+
+    delete[] firstArray;
+    delete[] benchArray;
 }
 
 Tactic* loadTactic(const std::string& teamName) {
@@ -164,7 +193,7 @@ Tactic* loadTactic(const std::string& teamName) {
 
 
 
-    if (sqlite3_open("C:\\Users\\kubak\\Projekty\\OpenFM\\database.db", &db) != SQLITE_OK) {
+    if (sqlite3_open("../../database.db", &db) != SQLITE_OK) {
         std::cerr << "Failed to open database\n";
         return nullptr;
     }
@@ -192,23 +221,22 @@ Tactic* loadTactic(const std::string& teamName) {
     sqlite3_finalize(stmt);
     sqlite3_close(db);
 
-    Tactic* newTactic = new Tactic(mentality, tempo, passingStyle, workRate, width, pressingLine, strictness, f1, f2, f3);
-
-
-    return newTactic;
+    return new Tactic(mentality, tempo, passingStyle, workRate, width, pressingLine, strictness, f1, f2, f3);
 }
 
 void sendStatsAsJson(int** stats, int numRows, int numCols, SOCKET_TYPE clientSocket) {
     nlohmann::json jsonStats;
+    jsonStats["type"] = "match-stats";
+    nlohmann::json statsArray = nlohmann::json::array();
 
     for (int i = 0; i < numRows; ++i) {
         nlohmann::json row;
         for (int j = 0; j < numCols; ++j) {
             row.push_back(stats[i][j]);
         }
-        jsonStats.push_back(row);
+        statsArray.push_back(row);
     }
-
+    jsonStats["data"] = statsArray;
     std::string jsonString = jsonStats.dump();
     send(clientSocket, jsonString.c_str(), jsonString.size(), 0);
 }
@@ -235,22 +263,19 @@ void handleClient(SOCKET_TYPE clientSocket, Match* match) {
 
     while ((recvResult = recv(clientSocket, buffer, sizeof(buffer), 0)) > 0) {
         std::string command(buffer, recvResult);
-
         if (!setupDone) {
             try {
                 auto j = nlohmann::json::parse(command);
+
                 if (j.contains("team1") && j.contains("team2")) {
                     std::string team1_n = j["team1"];
                     std::string team2_n = j["team2"];
-
                     Team* team1 = new Team(team1_n);
-                    team1->setPlayers(loadPlayers(team1_n, team1));
+                    loadPlayers(team1_n, team1);
                     team1->setTactic(loadTactic(team1_n));
-
                     Team* team2 = new Team(team2_n);
-                    team2->setPlayers(loadPlayers(team2_n, team2));
+                    loadPlayers(team2_n, team2);
                     team2->setTactic(loadTactic(team1_n));
-
                     match->setHomeTeam(team1);
                     match->setAwayTeam(team2);
 
@@ -268,16 +293,35 @@ void handleClient(SOCKET_TYPE clientSocket, Match* match) {
                 std::cerr << "JSON parsing error: " << e.what() << std::endl;
             }
         }
+        if (command.rfind("STATS", 0) == 0) {
+            std::string playerName = command.substr(6);
+            int* stats = match->getPlayerStats(playerName);
 
-        match->handleClientCommand(command);
+            nlohmann::json jsonStats;
+            jsonStats["type"] = "player-stats";
+            nlohmann::json statsArray = nlohmann::json::array();
+
+            for (int i = 0; i < 13; i++) {
+                statsArray.push_back(stats[i]);
+            }
+
+            jsonStats["data"] = statsArray;
+
+            std::string jsonString = jsonStats.dump();
+            send(clientSocket, jsonString.c_str(), jsonString.size(), 0);
+            delete[] stats;
+        }
+        else {
+            match->handleClientCommand(command);
+        }
         send(clientSocket, "ACK", 3, 0);
     }
 
-#if defined(_WIN32) || defined(_WIN64)
-    CLOSE_SOCKET(clientSocket);
-#else
-    CLOSE_SOCKET(clientSocket);
-#endif
+    #if defined(_WIN32) || defined(_WIN64)
+        CLOSE_SOCKET(clientSocket);
+    #else
+        CLOSE_SOCKET(clientSocket);
+    #endif
 }
 
 int main() {

@@ -21,6 +21,21 @@
 #define TOUCHES 8
 #define INTERCEPTIONS 9
 
+#define PLAYERGOALS 0
+#define PLAYERASSISTS 1
+#define PLAYERSHOTS 2
+#define PLAYERSHOTSONTARGET 3
+#define PLAYERTOUCHES 4
+#define PLAYERPASSESATTEMPT 5
+#define PLAYERPASSESCOMPLETED 6
+#define PLAYERSHORTPASSES 7
+#define PLAYERLONGPASSES 8
+#define PLAYERTHROUGHPASSES 9
+#define PLAYERDRIBBLESATTEMPT 10
+#define PLAYERDRIBBLESCOMPLETED 11
+#define PLAYERINTERCEPTIONS 12
+#define PLAYERBLOCKS 13
+
 class Match {
 private:
     Team* homeTeam, *awayTeam;
@@ -43,6 +58,7 @@ public:
     void secondSpeed();
     void thirdSpeed();
     void handleClientCommand(const std::string& command);
+    int* getPlayerStats(const std::string& name);
     int** getStats();
     void printStats();
     void matchStatsToFile();

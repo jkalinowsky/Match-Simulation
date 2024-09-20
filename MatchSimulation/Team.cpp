@@ -2,7 +2,25 @@
 
 Team::Team(std::string newName) {
     players = new Player*[11]();
+    benchPlayers = new Player*[9]();
     name = newName;
+}
+
+Team::~Team() {
+    delete tactic;
+    if (players) {
+        for (int i = 0; players[i] != nullptr; ++i) {
+            delete players[i];
+        }
+        delete[] players;
+    }
+
+    if (benchPlayers) {
+        for (int i = 0; benchPlayers[i] != nullptr; ++i) {
+            delete benchPlayers[i];
+        }
+        delete[] benchPlayers;
+    }
 }
 
 std::string Team::getName() {
@@ -71,6 +89,15 @@ Player **Team::getPlayersForPass(int passType, Player* tp) {
     return players;
 }
 
+int Team::findPlayerIndex(const std::string &name) {
+    for (int i=0; i<11; i++) {
+        if (players[i]->getName() == name)
+            return i;
+    }
+
+    return -1;
+}
+
 void Team::setTactic(Tactic* tactic) {
     this->tactic = tactic;
 }
@@ -78,6 +105,12 @@ void Team::setTactic(Tactic* tactic) {
 void Team::setPlayers(Player **players) {
     for (int i = 0; i < 11; i++) {
         this->players[i] = players[i];
+    }
+}
+
+void Team::setBenchPlayers(Player **players) {
+    for (int i = 0; i < 9; i++) {
+        this->benchPlayers[i] = players[i];
     }
 }
 

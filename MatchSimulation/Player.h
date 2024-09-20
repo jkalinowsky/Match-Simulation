@@ -20,6 +20,7 @@
 #define GK_REFLEXES 12
 
 enum PositionDetails {
+    NONE = -1,
     GK = 0,
     LB = 1,
     CB = 2,

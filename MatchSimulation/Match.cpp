@@ -27,9 +27,9 @@ Match::Match() : delay(300) {
     }
 
     for (int i = 0; i < 11; i++) {
-        homeStats[i] = new int[13];
-        awayStats[i] = new int[13];
-        for (int j = 0; j < 13; j++) {
+        homeStats[i] = new int[14];
+        awayStats[i] = new int[14];
+        for (int j = 0; j < 14; j++) {
             homeStats[i][j] = 0;
             awayStats[i][j] = 0;
         }
@@ -180,6 +180,23 @@ void Match::handleClientCommand(const std::string& command) {
     }
 }
 
+int* Match::getPlayerStats(const std::string &name) {
+    int* stats = new int[13];
+    int index = homeTeam->findPlayerIndex(name);
+    if (index == -1) {
+        awayTeam->findPlayerIndex(name);
+        for (int i = 0; i < 13; i++) {
+            stats[i] = awayStats[index][i];
+        }
+    }
+    else {
+        for (int i = 0; i < 13; i++) {
+            stats[i] = homeStats[index][i];
+        }
+    }
+    return stats;
+}
+
 void Match::attackAction(Team* team, Player** ballOwner, int* ball) {
     bool wasAction = false;
     for (int i = 0; i < 11; i++) {
@@ -212,11 +229,15 @@ void Match::defenceAction(Team *team, Player** ballOwner) {
 }
 
 void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
+    if (*ball == HOME)
+        this->homeStats[idx][PLAYERTOUCHES] += 1;
+    else
+        this->awayStats[idx][PLAYERTOUCHES] += 1;
     if ((*ballOwner)->shouldIShoot()) {
         //std::cout << "SHOT BY " << (*ballOwner)->getName() << " in " << time/60+1 << std::endl;
         stats[SHOTS][*ball] += 1;
         if (*ball == HOME) {
-            this->homeStats[idx][2] += 1;
+            this->homeStats[idx][PLAYERSHOTS] += 1;
             int index = awayTeam->getPlayerIndexAtFS((*ballOwner)->getFieldSection());
             if (index != -1) {
                 Player& defender = awayTeam->getPlayerIdx(index);
@@ -224,12 +245,12 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                     if (*ball == HOME) {
                         (*ballOwner) = &defender;
                         *ball = AWAY;
-                        this->awayStats[index][12] += 1;
+                        this->awayStats[index][PLAYERBLOCKS] += 1;
                     }
                     else {
                         (*ballOwner) = &defender;
                         *ball = HOME;
-                        this->homeStats[index][12] += 1;
+                        this->homeStats[index][PLAYERBLOCKS] += 1;
                     }
                     stats[INTERCEPTIONS][*ball] += 1;
                     return;
@@ -237,7 +258,7 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
             }
         }
         else if (*ball == AWAY) {
-            this->awayStats[idx][2] += 1;
+            this->awayStats[idx][PLAYERSHOTS] += 1;
             int index = homeTeam->getPlayerIndexAtFS((*ballOwner)->getFieldSection());
             if (index != -1) {
                 Player& defender = homeTeam->getPlayerIdx(index);
@@ -245,12 +266,12 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                     if (*ball == HOME) {
                         (*ballOwner) = &defender;
                         *ball = AWAY;
-                        this->awayStats[index][13] += 1;
+                        this->awayStats[index][PLAYERBLOCKS] += 1;
                     }
                     else {
                         (*ballOwner) = &defender;
                         *ball = HOME;
-                        this->homeStats[index][13] += 1;
+                        this->homeStats[index][PLAYERBLOCKS] += 1;
                     }
                     stats[INTERCEPTIONS][*ball] += 1;
                     return;
@@ -274,11 +295,11 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
             stats[SHOTS_OT][*ball] += 1;
             Player& gk = awayTeam->getPlayerIdx(0);
             if (*ball == AWAY) {
-                this->awayStats[idx][3] += 1;
+                this->awayStats[idx][PLAYERSHOTSONTARGET] += 1;
                 gk = homeTeam->getPlayerIdx(0);
             }
             else
-                this->homeStats[idx][3] += 1;
+                this->homeStats[idx][PLAYERSHOTSONTARGET] += 1;
 
 
             if (gk.didISaved(chance)) {
@@ -343,14 +364,14 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                 //std::cout << "GOOOOAAAAL BY " << (*ballOwner)->getName() << " in " << time/60+1 << " minute and xG was: " << chance << std::endl;
                 stats[GOALS][*ball] += 1;
                 if (*ball == HOME) {
-                    this->homeStats[idx][0];
+                    this->homeStats[idx][PLAYERGOALS];
                     (*ballOwner) = &awayTeam->getPlayerIdx(10);
                     *ball = AWAY;
                     resetPositions();
                     return;
                 }
                 else {
-                    this->awayStats[idx][0];
+                    this->awayStats[idx][PLAYERGOALS];
                     (*ballOwner) = &homeTeam->getPlayerIdx(10);
                     *ball = HOME;
                     resetPositions();
@@ -380,22 +401,22 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
 
             int passType = (*ballOwner)->choosePassType();
             if (*ball == HOME) {
-                this->homeStats[idx][5] += 1;
+                this->homeStats[idx][PLAYERPASSESATTEMPT] += 1;
                 if (passType == 0)
-                    this->homeStats[idx][7] += 1;
+                    this->homeStats[idx][PLAYERSHORTPASSES] += 1;
                 else if (passType == 1)
-                    this->homeStats[idx][9] += 1;
+                    this->homeStats[idx][PLAYERTHROUGHPASSES] += 1;
                 else
-                    this->homeStats[idx][8] += 1;
+                    this->homeStats[idx][PLAYERLONGPASSES] += 1;
             }
             else {
-                this->awayStats[idx][5] += 1;
+                this->awayStats[idx][PLAYERPASSESATTEMPT] += 1;
                 if (passType == 0)
-                    this->awayStats[idx][7] += 1;
+                    this->awayStats[idx][PLAYERSHORTPASSES] += 1;
                 else if (passType == 1)
-                    this->awayStats[idx][9] += 1;
+                    this->awayStats[idx][PLAYERTHROUGHPASSES] += 1;
                 else
-                    this->awayStats[idx][8] += 1;
+                    this->awayStats[idx][PLAYERLONGPASSES] += 1;
             }
 
             int i = (*ballOwner)->choosePlayerForPass(passType);;
@@ -423,18 +444,18 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                             if (*ball == HOME) {
                                 (*ballOwner) = &defender;
                                 *ball = AWAY;
-                                this->awayStats[index][12] += 1;
+                                this->awayStats[index][PLAYERINTERCEPTIONS] += 1;
                             }
                             else {
                                 (*ballOwner) = &defender;
                                 *ball = HOME;
-                                this->homeStats[index][12] += 1;
+                                this->homeStats[index][PLAYERINTERCEPTIONS] += 1;
                             }
                             stats[INTERCEPTIONS][*ball] += 1;
                             return;
                         }
                     }
-                    this->homeStats[idx][6] += 1;
+                    this->homeStats[idx][PLAYERPASSESCOMPLETED] += 1;
                 }
                 else if (*ball == AWAY) {
                     int index = homeTeam->getPlayerIndexAtFS((*ballOwner)->getFieldSection());
@@ -444,18 +465,18 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                             if (*ball == HOME) {
                                 (*ballOwner) = &defender;
                                 *ball = AWAY;
-                                this->awayStats[index][12] += 1;
+                                this->awayStats[index][PLAYERINTERCEPTIONS] += 1;
                             }
                             else {
                                 (*ballOwner) = &defender;
                                 *ball = HOME;
-                                this->homeStats[index][12] += 1;
+                                this->homeStats[index][PLAYERINTERCEPTIONS] += 1;
                             }
                             stats[INTERCEPTIONS][*ball] += 1;
                             return;
                         }
                     }
-                    this->awayStats[idx][6] += 1;
+                    this->awayStats[idx][PLAYERPASSESCOMPLETED] += 1;
                 }
                 //std::cout << "Ball passed from " << ballOwner->getName() << " to " << passPlayer->getName() << std::endl;
                 (*ballOwner) = &passPlayer;
@@ -481,7 +502,7 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
         }
         else {
             if (*ball == HOME) {
-                this->homeStats[idx][10] += 1;
+                this->homeStats[idx][PLAYERDRIBBLESATTEMPT] += 1;
                 int index = awayTeam->getPlayerIndexAtFS((*ballOwner)->getFieldSection());
                 if (index != -1) {
                     Player& defender = awayTeam->getPlayerIdx(index);
@@ -489,21 +510,21 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                         if (*ball == HOME) {
                             (*ballOwner) = &defender;
                             *ball = AWAY;
-                            this->awayStats[index][12] += 1;
+                            this->awayStats[index][PLAYERINTERCEPTIONS] += 1;
                         }
                         else {
                             (*ballOwner) = &defender;
                             *ball = HOME;
-                            this->homeStats[index][12] += 1;
+                            this->homeStats[index][PLAYERINTERCEPTIONS] += 1;
                         }
                         stats[INTERCEPTIONS][*ball] += 1;
                         return;
                     }
                 }
-                this->homeStats[idx][11] += 1;
+                this->homeStats[idx][PLAYERDRIBBLESCOMPLETED] += 1;
             }
             else if (*ball == AWAY) {
-                this->awayStats[idx][10] += 1;
+                this->awayStats[idx][PLAYERDRIBBLESATTEMPT] += 1;
                 int index = homeTeam->getPlayerIndexAtFS((*ballOwner)->getFieldSection());
                 if (index != -1) {
                     Player& defender = homeTeam->getPlayerIdx(index);
@@ -511,18 +532,18 @@ void Match::actionWithBall(Player** ballOwner, int* ball, int idx) {
                         if (*ball == HOME) {
                             (*ballOwner) = &defender;
                             *ball = AWAY;
-                            this->awayStats[index][12] += 1;
+                            this->awayStats[index][PLAYERINTERCEPTIONS] += 1;
                         }
                         else {
                             (*ballOwner) = &defender;
                             *ball = HOME;
-                            this->homeStats[index][12] += 1;
+                            this->homeStats[index][PLAYERINTERCEPTIONS] += 1;
                         }
                         stats[INTERCEPTIONS][*ball] += 1;
                         return;
                     }
                 }
-                this->awayStats[idx][11] += 1;
+                this->awayStats[idx][PLAYERDRIBBLESCOMPLETED] += 1;
             }
             if ((*ballOwner)->getMovingCooldown() == 0) {
                 (*ballOwner)->dribble();

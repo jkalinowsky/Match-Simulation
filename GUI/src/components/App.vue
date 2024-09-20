@@ -32,8 +32,8 @@ export default {
   data() {
     return {
       teams: [],
-      selectedTeam1: '',
-      selectedTeam2: '',
+      selectedTeam1: 'Manchester United',
+      selectedTeam2: 'Manchester City',
     };
   },
   async mounted() {
